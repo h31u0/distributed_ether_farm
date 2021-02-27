@@ -1,11 +1,19 @@
 # distributed_ether_farm
 
 ## Game Concept
-Decentralized applications: We propose to build a game like FarmVille on blockchains. In the game, each user owns farmland where a user can plant, grow and harvest crops. A user can add friends with another user and steal his/her friend's mature crops. Each crop is represented by a token and can be kept by the user after it's harvested. Users can trade the tokens they have with each other. Additionally, a front end will be implemented to display the status of the farmland, to visualize crops a user has, and to keep track of transaction histories.
+In this project, we’ll build a DAPP (decentralized application) game to combine the business simulation game with blockchain technology. In the game, each user owns farmland where a user can plant, grow and harvest crops. A user can add friends with another user and steal his/her friend's mature crops. Each crop is represented by a token and can be kept by the user after it's harvested. Users can trade the tokens they have with each other. 
 
 ## Outline of Game Play
 
-In this project we would like to build a DAPP game to combine traditional business simulation game with blockchain technology.
+The goal of the game is to become an experienced farmer and grow rare crops. We will go through the game process in detail and describe functionality that the game allows for the user.  A user in the game maintains farmland, represented by a 3 by 3 grid, and an initial amount of money. With the initial money, each user could buy various kinds of crop seeds, ranging from corn, rice to wheat. A user can put a seed per cell on the grid, and need to water them on time. After a predefined time which represents the growth cycle of a crop, the crop matures and the user can harvest them. In this phase, a user’s friend could steal mature crops if they are not harvested by the user. After harvesting, a user gains experience and when the experience reaches the limit to the next level. The system unlocks a new set of crop seeds for the user. A user can store the harvested crops and sell the crops for money so that they could buy seeds later. 
+In this game, a crop is represented by a token and can be saved in the user's account permanently. In addition to business managing the game itself, the game supports a marketplace for users to exchange harvested crop tokens with each other. 
+In summary, a user can 
+Markup : * Buy seeds
+         * Grow crops
+         * Steal friends’ mature crops
+         * Sell crops 
+         * Exchange crop token on the market
+
 This project involves environment setup, smart contract development and frontend development.
 
 The basic technique we would implement can be summarized as follows:
