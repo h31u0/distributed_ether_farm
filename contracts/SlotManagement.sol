@@ -7,6 +7,7 @@ contract SlotManagement is SlotFactory {
         require(msg.sender == slotToOwner[_slotID]);
         _;
     }
+    // TODO: find a way to change 100 to some random number
     function _randomNumber(uint _limit) internal view returns (uint) {
         return 100 % _limit;
     }
