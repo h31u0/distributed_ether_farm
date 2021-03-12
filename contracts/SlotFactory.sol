@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 contract SlotFactory {
     
-    event createFarmEvent(uint level, uint numSlot);
+    event createSlotEvent(address indexed addr, uint[] cropIDs);
 
     struct Slot {
         uint cropID;
@@ -23,18 +23,21 @@ contract SlotFactory {
     // mapping (address => string) public OwnerName;
 
     function _createFarm() internal {
-        _createCrops(6);
+        uint[] memory result = _createCrops(6);
         OwnerMoneyCount[msg.sender] = 100;
         // OwnerName[msg.sender] = _name;
-        emit createFarmEvent(1, 6);
+        emit createSlotEvent(msg.sender, result);
     }
-    function _createCrops(uint num) internal {
+    function _createCrops(uint num) internal returns(uint[] memory) {
+        uint[] memory result = new uint[](num);
         for (uint256 index = 0; index < num; index++) {
             uint id = slots.length;
             slots.push(Slot(0, 0, 0, 0, 0, false, 1));
             slotToOwner[id] = msg.sender;
             OwnerSlotCount[msg.sender]++;
+            result[index] = id;
         }
+        return result;
     }
     function createFarm() public{
         require(OwnerSlotCount[msg.sender] == 0);
