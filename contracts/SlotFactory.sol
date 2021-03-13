@@ -23,12 +23,12 @@ contract SlotFactory {
     // mapping (address => string) public OwnerName;
 
     function _createFarm() internal {
-        uint[] memory result = _createCrops(6);
+        _createCrops(6);
         OwnerMoneyCount[msg.sender] = 100;
         // OwnerName[msg.sender] = _name;
-        emit createSlotEvent(msg.sender, result);
+        
     }
-    function _createCrops(uint num) internal returns(uint[] memory) {
+    function _createCrops(uint num) internal {
         uint[] memory result = new uint[](num);
         for (uint256 index = 0; index < num; index++) {
             uint id = slots.length;
@@ -37,7 +37,7 @@ contract SlotFactory {
             OwnerSlotCount[msg.sender]++;
             result[index] = id;
         }
-        return result;
+        emit createSlotEvent(msg.sender, result);
     }
     function createFarm() public{
         require(OwnerSlotCount[msg.sender] == 0);
@@ -53,5 +53,14 @@ contract SlotFactory {
             }
         }
         return result;
+    }
+    function getLevel(uint level) public pure returns (uint) {
+        uint a = level;
+        uint res = 0;
+        while(a != 0){
+            a = a/10;
+            res++;
+        }
+        return res;
     }
 }

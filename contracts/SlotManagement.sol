@@ -2,7 +2,7 @@ pragma solidity ^0.8.0;
 import "./SlotFactory.sol";
 contract SlotManagement is SlotFactory {
     event updateSlot(address indexed owner, uint slotID,uint cropID,uint grow_time,uint price,uint dry_time,uint grass_time,bool stealed, uint level);
-    event updateCropList(uint cropID,uint grow_time, uint level);
+    event updateCropList(uint cropID,uint grow_time, uint price, uint level);
     event deleteCropList(uint cropID);
     mapping (uint => Slot) public cropsList;
 
@@ -14,9 +14,9 @@ contract SlotManagement is SlotFactory {
         return uint(keccak256(abi.encodePacked(msg.sender, block.timestamp))) % _limit;
 
     }
-    function modInCropsList(uint _cropID, uint _grow_time, uint _price) external {
-        cropsList[_cropID] = Slot(_cropID, _grow_time, _price, 0, 0, false, 1);
-        emit updateCropList(_cropID, _grow_time, _price);
+    function modInCropsList(uint _cropID, uint _grow_time, uint _price, uint _level) external {
+        cropsList[_cropID] = Slot(_cropID, _grow_time, _price, 0, 0, false, _level);
+        emit updateCropList(_cropID, _grow_time, _price, _level);
     }
     function delInCropsList(uint _cropID) external {
         cropsList[_cropID] = Slot(0, 0, 0, 0, 0, false, 1);
@@ -40,9 +40,10 @@ contract SlotManagement is SlotFactory {
     function _isGrass(Slot storage _slot) internal view returns (bool) {
         return (_slot.grass_time <= block.timestamp);
     }
+
     function plant(uint _cropID, uint _slotID) public ownerOf(_slotID){
         Slot storage mySlot = slots[_slotID];
-        require(mySlot.cropID == 0 && OwnerMoneyCount[msg.sender] > (cropsList[_cropID].price));
+        require(mySlot.cropID == 0 && OwnerMoneyCount[msg.sender] >= cropsList[_cropID].price && getLevel(mySlot.level) >=cropsList[_cropID].level);
         OwnerMoneyCount[msg.sender] = OwnerMoneyCount[msg.sender] - (cropsList[_cropID].price);
         mySlot.cropID = cropsList[_cropID].cropID;
         mySlot.grow_time = cropsList[_cropID].grow_time;
@@ -68,6 +69,9 @@ contract SlotManagement is SlotFactory {
         }
         OwnerMoneyCount[msg.sender] = OwnerMoneyCount[msg.sender] + (mySlot.price * _tag);
         mySlot.cropID = 0;
+        if(_tag == 5){
+            mySlot.level ++;
+        }
         emit updateSlot(msg.sender, _slotID, 0, 0, 0, 0, 0, false, mySlot.level);
 
     }
