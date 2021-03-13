@@ -17,5 +17,4 @@ contract SlotUpgrade is SlotFactory {
     function setLevelUpFee(uint _fee) external /*onlyOwner*/ {
         levelUpFee = _fee;
     }
-    
 }

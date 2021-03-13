@@ -1,19 +1,13 @@
 pragma solidity ^0.8.0;
 import "./SlotFactory.sol";
-contract SlotManagement is SlotFactory {
+import "./SlotUtils.sol";
+contract SlotManagement is SlotFactory, SlotUtils{
     event updateSlot(address indexed owner, uint slotID,uint cropID,uint grow_time,uint price,uint dry_time,uint grass_time,bool stealed, uint level);
     event updateCropList(uint cropID,uint grow_time, uint price, uint level);
     event deleteCropList(uint cropID);
     mapping (uint => Slot) public cropsList;
 
-    modifier ownerOf(uint _slotID) {
-        require(msg.sender == slotToOwner[_slotID]);
-        _;
-    }
-    function _randomNumber(uint _limit) internal view returns (uint) {
-        return uint(keccak256(abi.encodePacked(msg.sender, block.timestamp))) % _limit;
-
-    }
+    
     function modInCropsList(uint _cropID, uint _grow_time, uint _price, uint _level) external {
         cropsList[_cropID] = Slot(_cropID, _grow_time, _price, 0, 0, false, _level);
         emit updateCropList(_cropID, _grow_time, _price, _level);
@@ -22,6 +16,7 @@ contract SlotManagement is SlotFactory {
         cropsList[_cropID] = Slot(0, 0, 0, 0, 0, false, 1);
         emit deleteCropList(_cropID);
     }
+
     function _triggerGrow(Slot storage _slot) internal {
         _slot.grow_time = uint32(block.timestamp + (cropsList[_slot.cropID].grow_time * (10-_slot.level)));
     }
@@ -41,7 +36,7 @@ contract SlotManagement is SlotFactory {
         return (_slot.grass_time <= block.timestamp);
     }
 
-    function plant(uint _cropID, uint _slotID) public ownerOf(_slotID){
+    function plant(uint _cropID, uint _slotID) public onlyOwnerOf(_slotID){
         Slot storage mySlot = slots[_slotID];
         require(mySlot.cropID == 0 && OwnerMoneyCount[msg.sender] >= cropsList[_cropID].price && getLevel(mySlot.level) >=cropsList[_cropID].level);
         OwnerMoneyCount[msg.sender] = OwnerMoneyCount[msg.sender] - (cropsList[_cropID].price);
@@ -54,7 +49,7 @@ contract SlotManagement is SlotFactory {
         _triggerGrass(mySlot);
         emit updateSlot(msg.sender, _slotID, _cropID, mySlot.grow_time, mySlot.price, mySlot.dry_time, mySlot.grass_time, false, mySlot.level);
     }
-    function harvest(uint _slotID) public ownerOf(_slotID){
+    function harvest(uint _slotID) public onlyOwnerOf(_slotID){
         Slot storage mySlot = slots[_slotID];
         require(_isReady(mySlot));
         uint _tag = 5;
@@ -76,14 +71,14 @@ contract SlotManagement is SlotFactory {
 
     }
 
-    function watering(uint _slotID) public ownerOf(_slotID){
+    function watering(uint _slotID) public onlyOwnerOf(_slotID){
         Slot storage mySlot = slots[_slotID];
         require(! _isReady(mySlot) && _isDry(mySlot));
         _triggerDry(mySlot);
         emit updateSlot(msg.sender, _slotID, mySlot.cropID, mySlot.grow_time, mySlot.price, mySlot.dry_time, mySlot.grass_time, false, mySlot.level);
 
     }
-    function weeding(uint _slotID) public ownerOf(_slotID){
+    function weeding(uint _slotID) public onlyOwnerOf(_slotID){
         Slot storage mySlot = slots[_slotID];
         require(! _isReady(mySlot) && _isGrass(mySlot));
         _triggerGrass(mySlot);

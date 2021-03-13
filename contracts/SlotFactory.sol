@@ -1,7 +1,6 @@
 pragma solidity ^0.8.0;
 // import "@openzeppelin/contracts/access/Ownable.sol";
-
-contract SlotFactory {
+contract SlotFactory{
     
     event createSlotEvent(address indexed addr, uint[] cropIDs);
 
