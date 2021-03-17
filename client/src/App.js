@@ -65,6 +65,8 @@ class App extends Component {
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
       this.setState({ web3, accounts, contract: slotManagementInstance}, this.getFactory);
+
+      setInterval(this.localStateUpdate, 1000);
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -84,7 +86,6 @@ class App extends Component {
     for (var i in tmp) {
       var tmpInt = parseInt(tmp[i]);
       var tmp1 = await contract.methods.slots(tmpInt).call({from: accounts[0]});
-      console.log(tmp1)
       tmp1.key = tmpInt;
       results.push(tmp1);
     }
@@ -92,7 +93,8 @@ class App extends Component {
     tmp = await contract.methods.OwnerMoneyCount(accounts[0]).call({from: accounts[0]});
     var ownerBalance = parseInt(tmp);
 
-    console.log(results);
+    console.log(results)
+
     this.setState({ slots: results, owner: contractOwner, balance: ownerBalance });
   };
 
@@ -110,7 +112,7 @@ class App extends Component {
         const { accounts, contract } = this.state;
         this.setState({createFarmButtonDisabled: true});
         contract.methods.createFarm().send({ from: accounts[0] });
-        setTimeout(this.getFactory, 3000);
+        setTimeout(this.getFactory, 5000);
       }}>Create Farm</Button>
     }
   }
@@ -129,13 +131,13 @@ class App extends Component {
             var tmp = await contract.methods.cropsList(entry_in.id).call({from: accounts[0]});
             console.log(tmp);
           }
-        }, 3000);
+        }, 5000);
       }}>Update Crop List</Button>
     }
   }
 
   createSlotManagementButtons = () => {
-    const { accounts, contract } = this.state;
+    const { accounts, contract, balance } = this.state;
     var selected = this.state.selectedItem;
     if (selected != null) {
       const slotID = selected.key;
@@ -143,25 +145,67 @@ class App extends Component {
         var arr = []
         for (var i in cropList) {
           const crop = cropList[i];
-          if (selected.exp >= parseInt(crop.exp)) {
+          if (selected.exp >= parseInt(crop.exp) && balance > crop.price) {
             arr.push(<Button key={i} onClick={(event) => {
               contract.methods.plant(crop.id, slotID).send({from: accounts[0]});
-              setTimeout(this.getFactory, 3000);
+              setTimeout(this.getFactory, 5000);
             }}>Plant {crop.name}</Button>);
           }
         }
         return arr;
       }
-      else {
+      else if (selected.harvestable) {
+        return <Button onClick={(event) => {
+          contract.methods.harvest(slotID).send({from: accounts[0]});
+          setTimeout(this.getFactory, 5000);
+        }}>Harvest</Button>
+      }
+      else { 
         return <div><Button onClick={(event) => {
 
         }}>Water</Button><Button onClick={(event) => {
 
-        }}>Weed</Button><Button onClick={(event) => {
-
-        }}>Harvest</Button></div>
+        }}>Weed</Button></div>
       }
     }
+  }
+
+  localStateUpdate = () => {
+    const { slots } = this.state;
+    const timeStamp = Date.parse(new Date()) / 1000;
+    if (slots == null) return;
+
+    for (var i in slots) {
+      var entry = slots[i];
+      entry.dry = false;
+      entry.grass = false;
+      entry.harvestable = false;
+      entry.status = []
+      // grow_time, grass_time, dry_time
+      if (entry.grow_time == 0) {
+        entry.count_down = "NA"
+      }
+      else if (timeStamp >= entry.grow_time) {
+        entry.count_down = 0;
+        entry.harvestable = true;
+      }
+      else {
+        entry.count_down = entry.grow_time - timeStamp;
+      }
+
+      if (entry.grow_time != 0) {
+        if (entry.grass_time <= timeStamp) {
+          entry.grass = true;
+          entry.status.push("grass")
+        }
+        if (entry.dry_time <= timeStamp) {
+          entry.dry = true;
+          entry.status.push("dry")
+        }
+      }
+    }
+
+    this.setState({ slots: slots });
   }
 
   render() {
@@ -175,6 +219,9 @@ class App extends Component {
         }
         else {
           entry.name = cropList[parseInt(entry.cropID) - 1].name;
+          if (entry.dry || entry.grass) {
+            entry.name = entry.name + " (" + entry.status.toString() + ")";
+          }
         }
       }
     }
@@ -182,7 +229,8 @@ class App extends Component {
     var cols = [
       {title: "crop name", dataIndex: "name"},
       {title: "exp", dataIndex: "exp"},
-      {title: "price", dataIndex: "price"}
+      {title: "price", dataIndex: "price"},
+      {title: "time to harvest", dataIndex: "count_down"}
     ];
 
     if (!this.state.web3) {
