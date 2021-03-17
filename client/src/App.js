@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
 import SlotFactoryContract from "./contracts/SlotFactory.json";
 import SlotManagementContract from "./contracts/SlotManagement.json";
 import SlotUpgradeContract from "./contracts/SlotUpgrade.json";
@@ -12,8 +11,33 @@ import "./App.css";
 
 const { Header, Content, Footer } = Layout;
 
+const cropList = [
+  {
+    name: "apple",
+    id: 1,
+    growTime: 60,
+    exp: 1,
+    price: 3
+  },
+  {
+    name: "banana",
+    id: 2,
+    growTime: 40,
+    exp: 5,
+    price: 1
+  },
+  {
+    name: "pineapple",
+    id: 3,
+    growTime: 30,
+    exp: 2,
+    price: 2
+  }
+]
+
 class App extends Component {
   state = {
+    owner: null,
     web3: null,
     accounts: null,
     contracts: {
@@ -72,8 +96,9 @@ class App extends Component {
   };
 
   getFactory = async () => {
-    console.log("get factory")
     const { accounts, contracts } = this.state;
+
+    var contractOwner = await contracts.management.methods.owner().call({from: accounts[0]});
 
     var tmp = await contracts.factory.methods.getFarmByOwner(accounts[0]).call({from: accounts[0]});
     var results = []
@@ -84,7 +109,7 @@ class App extends Component {
       results.push(tmp1);
     }
 
-    this.setState({ slots: results });
+    this.setState({ slots: results, owner: contractOwner });
   };
 
   onRowCallback = (record) => {
@@ -96,14 +121,32 @@ class App extends Component {
   }
 
   createFarmButton = () => {
-    console.log("create farm button")
     if (this.state.slots != null && this.state.slots.length == 0) {
       return <Button disabled={this.state.createFarmButtonDisabled} onClick={(event) => {
         const { accounts, contracts } = this.state;
         this.setState({createFarmButtonDisabled: true});
         contracts.factory.methods.createFarm().send({ from: accounts[0] });
-        setTimeout(this.getFactory, 5000);
+        setTimeout(this.getFactory, 3000);
       }}>Create Farm</Button>
+    }
+  }
+
+  createUpdateCropListButton = () => {
+    if (this.state.owner == this.state.accounts[0]) {
+      return <Button disabled={this.state.createFarmButtonDisabled} onClick={(event) => {
+        const { accounts, contracts } = this.state;
+        for (var i in cropList) {
+          var entry = cropList[i];
+          contracts.management.methods.modInCropsList(entry.id, entry.growTime, entry.price, entry.exp).send({from: accounts[0]});
+        }
+        setTimeout(async () => {
+          for (var ii in cropList) {
+            var entry_in = cropList[ii];
+            var tmp = await contracts.management.methods.cropsList(entry_in.id).call({from: accounts[0]});
+            console.log(tmp);
+          }
+        }, 3000);
+      }}>Update Crop List</Button>
     }
   }
 
@@ -111,7 +154,7 @@ class App extends Component {
     var itemList = this.state.slots;
     var cols = [
       {title: "crop ID", dataIndex: "cropID"},
-      {title: "level", dataIndex: "level"},
+      {title: "exp", dataIndex: "exp"},
       {title: "price", dataIndex: "price"}
     ]
 
@@ -126,18 +169,19 @@ class App extends Component {
         </Header>
         <Content style={{ padding: '0 50px' }}>
           <div className="site-layout-content">
-          <Table onRow={this.onRowCallback} 
-            dataSource={itemList} 
-            columns={cols} 
-            pagination={false} 
-            showHeader={true} 
-            style={{cursor:"pointer"}} 
-            bordered={true}
-            rowSelection={{
-              type: "radio",
-              selectedRowKeys: this.state.selectedItem == null ? [] : [this.state.selectedItem.key]
-            }}
-          />
+            {this.createUpdateCropListButton()}
+            <Table onRow={this.onRowCallback} 
+              dataSource={itemList} 
+              columns={cols} 
+              pagination={false} 
+              showHeader={true} 
+              style={{cursor:"pointer"}} 
+              bordered={true}
+              rowSelection={{
+                type: "radio",
+                selectedRowKeys: this.state.selectedItem == null ? [] : [this.state.selectedItem.key]
+              }}
+            />
             selected item: {this.state.selectedItem == null ? "" : this.state.selectedItem.key}
           </div>
           {this.createFarmButton()}
