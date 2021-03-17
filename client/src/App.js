@@ -87,6 +87,12 @@ class App extends Component {
       var tmpInt = parseInt(tmp[i]);
       var tmp1 = await contract.methods.slots(tmpInt).call({from: accounts[0]});
       tmp1.key = tmpInt;
+      if (tmp1.cropID == "0") {
+        tmp1.price = 0;
+        tmp1.grass_time = 0;
+        tmp1.grow_time = 0;
+        tmp1.dry_time = 0;
+      }
       results.push(tmp1);
     }
 
@@ -142,7 +148,7 @@ class App extends Component {
     if (selected != null) {
       const slotID = selected.key;
       if (selected.cropID == "0") {
-        var arr = []
+        var arr = [];
         for (var i in cropList) {
           const crop = cropList[i];
           if (selected.exp >= parseInt(crop.exp) && balance > crop.price) {
@@ -160,12 +166,21 @@ class App extends Component {
           setTimeout(this.getFactory, 5000);
         }}>Harvest</Button>
       }
-      else { 
-        return <div><Button onClick={(event) => {
-
-        }}>Water</Button><Button onClick={(event) => {
-
-        }}>Weed</Button></div>
+      else {
+        var arr2 = [];
+        if (selected.dry) {
+          arr2.push(<Button key={0} onClick={(event) => {
+            contract.methods.watering(slotID).send({from: accounts[0]});
+            setTimeout(this.getFactory, 5000);
+          }}>Water</Button>);
+        }
+        if (selected.grass) {
+          arr2.push(<Button key={1} onClick={(event) => {
+            contract.methods.weeding(slotID).send({from: accounts[0]});
+            setTimeout(this.getFactory, 5000);
+          }}>Weed</Button>);
+        }
+        return arr2;
       }
     }
   }
