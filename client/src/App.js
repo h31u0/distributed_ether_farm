@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import SlotFactoryContract from "./contracts/SlotFactory.json";
 import SlotManagementContract from "./contracts/SlotManagement.json";
-import SlotUpgradeContract from "./contracts/SlotUpgrade.json";
 import getWeb3 from "./getWeb3";
 import { Layout, Table, Button } from 'antd';
 import { BuildOutlined } from '@ant-design/icons';
@@ -41,11 +39,7 @@ class App extends Component {
     balance: 0,
     web3: null,
     accounts: null,
-    contracts: {
-      factory: null,
-      management: null,
-      upgrade: null
-    },
+    contract: null,
     slots: null,
     createFarmButtonDisabled: false,
     selectedItem: null
@@ -62,31 +56,15 @@ class App extends Component {
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
 
-      const slotFactoryNetwork = SlotFactoryContract.networks[networkId];
-      const slotFactoryInstance = new web3.eth.Contract(
-        SlotFactoryContract.abi,
-        slotFactoryNetwork && slotFactoryNetwork.address
-      );
-
       const slotManagementNetwork = SlotManagementContract.networks[networkId];
       const slotManagementInstance = new web3.eth.Contract(
         SlotManagementContract.abi,
         slotManagementNetwork && slotManagementNetwork.address
       )
 
-      const slotUpgradeNetwork = SlotUpgradeContract.networks[networkId];
-      const slotUpgradeInstance = new web3.eth.Contract(
-        SlotUpgradeContract.abi,
-        slotUpgradeNetwork && slotUpgradeNetwork.address
-      )
-
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contracts: {
-        factory: slotFactoryInstance,
-        management: slotManagementInstance,
-        upgrade: slotUpgradeInstance
-      }}, this.getFactory);
+      this.setState({ web3, accounts, contract: slotManagementInstance}, this.getFactory);
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -97,21 +75,21 @@ class App extends Component {
   };
 
   getFactory = async () => {
-    const { accounts, contracts } = this.state;
+    const { accounts, contract } = this.state;
 
-    var contractOwner = await contracts.management.methods.owner().call({from: accounts[0]});
-    var tmp = await contracts.management.methods.getFarmByOwner(accounts[0]).call({from: accounts[0]});
+    var contractOwner = await contract.methods.owner().call({from: accounts[0]});
+    var tmp = await contract.methods.getFarmByOwner(accounts[0]).call({from: accounts[0]});
     var results = []
 
     for (var i in tmp) {
       var tmpInt = parseInt(tmp[i]);
-      var tmp1 = await contracts.management.methods.slots(tmpInt).call({from: accounts[0]});
+      var tmp1 = await contract.methods.slots(tmpInt).call({from: accounts[0]});
       console.log(tmp1)
       tmp1.key = tmpInt;
       results.push(tmp1);
     }
 
-    tmp = await contracts.management.methods.OwnerMoneyCount(accounts[0]).call({from: accounts[0]});
+    tmp = await contract.methods.OwnerMoneyCount(accounts[0]).call({from: accounts[0]});
     var ownerBalance = parseInt(tmp);
 
     console.log(results);
@@ -129,9 +107,9 @@ class App extends Component {
   createFarmButton = () => {
     if (this.state.slots != null && this.state.slots.length == 0) {
       return <Button disabled={this.state.createFarmButtonDisabled} onClick={(event) => {
-        const { accounts, contracts } = this.state;
+        const { accounts, contract } = this.state;
         this.setState({createFarmButtonDisabled: true});
-        contracts.management.methods.createFarm().send({ from: accounts[0] });
+        contract.methods.createFarm().send({ from: accounts[0] });
         setTimeout(this.getFactory, 3000);
       }}>Create Farm</Button>
     }
@@ -140,15 +118,15 @@ class App extends Component {
   createUpdateCropListButton = () => {
     if (this.state.owner == this.state.accounts[0]) {
       return <Button onClick={(event) => {
-        const { accounts, contracts } = this.state;
+        const { accounts, contract } = this.state;
         for (var i in cropList) {
           var entry = cropList[i];
-          contracts.management.methods.modInCropsList(entry.id, entry.growTime, entry.price, entry.exp).send({from: accounts[0]});
+          contract.methods.modInCropsList(entry.id, entry.growTime, entry.price, entry.exp).send({from: accounts[0]});
         }
         setTimeout(async () => {
           for (var ii in cropList) {
             var entry_in = cropList[ii];
-            var tmp = await contracts.management.methods.cropsList(entry_in.id).call({from: accounts[0]});
+            var tmp = await contract.methods.cropsList(entry_in.id).call({from: accounts[0]});
             console.log(tmp);
           }
         }, 3000);
@@ -157,7 +135,7 @@ class App extends Component {
   }
 
   createSlotManagementButtons = () => {
-    const { accounts, contracts } = this.state;
+    const { accounts, contract } = this.state;
     var selected = this.state.selectedItem;
     if (selected != null) {
       const slotID = selected.key;
@@ -167,7 +145,7 @@ class App extends Component {
           const crop = cropList[i];
           if (selected.exp >= parseInt(crop.exp)) {
             arr.push(<Button key={i} onClick={(event) => {
-              contracts.management.methods.plant(crop.id, slotID).send({from: accounts[0]});
+              contract.methods.plant(crop.id, slotID).send({from: accounts[0]});
               setTimeout(this.getFactory, 3000);
             }}>Plant {crop.name}</Button>);
           }
@@ -180,8 +158,6 @@ class App extends Component {
         }}>Water</Button><Button onClick={(event) => {
 
         }}>Weed</Button><Button onClick={(event) => {
-
-        }}>Remove</Button><Button onClick={(event) => {
 
         }}>Harvest</Button></div>
       }
