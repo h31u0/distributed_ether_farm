@@ -15,22 +15,22 @@ const cropList = [
   {
     name: "apple",
     id: 1,
-    growTime: 60,
-    exp: 1,
+    growTime: 150,
+    exp: 0,
     price: 3
   },
   {
     name: "banana",
     id: 2,
-    growTime: 40,
-    exp: 5,
+    growTime: 160,
+    exp: 0,
     price: 1
   },
   {
     name: "pineapple",
     id: 3,
-    growTime: 30,
-    exp: 2,
+    growTime: 140,
+    exp: 5,
     price: 2
   }
 ]
@@ -38,6 +38,7 @@ const cropList = [
 class App extends Component {
   state = {
     owner: null,
+    balance: 0,
     web3: null,
     accounts: null,
     contracts: {
@@ -99,17 +100,20 @@ class App extends Component {
     const { accounts, contracts } = this.state;
 
     var contractOwner = await contracts.management.methods.owner().call({from: accounts[0]});
-
     var tmp = await contracts.factory.methods.getFarmByOwner(accounts[0]).call({from: accounts[0]});
     var results = []
+
     for (var i in tmp) {
-      var tmpInt = parseInt(i);
+      var tmpInt = parseInt(tmp[i]);
       var tmp1 = await contracts.factory.methods.slots(tmpInt).call({from: accounts[0]});
       tmp1.key = tmpInt;
       results.push(tmp1);
     }
 
-    this.setState({ slots: results, owner: contractOwner });
+    tmp = await contracts.factory.methods.OwnerMoneyCount(accounts[0]).call({from: accounts[0]});
+    var ownerBalance = parseInt(tmp);
+
+    this.setState({ slots: results, owner: contractOwner, balance: ownerBalance });
   };
 
   onRowCallback = (record) => {
@@ -133,7 +137,7 @@ class App extends Component {
 
   createUpdateCropListButton = () => {
     if (this.state.owner == this.state.accounts[0]) {
-      return <Button disabled={this.state.createFarmButtonDisabled} onClick={(event) => {
+      return <Button onClick={(event) => {
         const { accounts, contracts } = this.state;
         for (var i in cropList) {
           var entry = cropList[i];
@@ -150,13 +154,59 @@ class App extends Component {
     }
   }
 
+  createSlotManagementButtons = () => {
+    const { accounts, contracts } = this.state;
+    var selected = this.state.selectedItem;
+    if (selected != null) {
+      const slotID = selected.key;
+      if (selected.cropID == "0") {
+        var arr = []
+        for (var i in cropList) {
+          const crop = cropList[i];
+          if (selected.exp >= parseInt(crop.exp)) {
+            arr.push(<Button key={i} onClick={(event) => {
+              contracts.management.methods.plant(crop.id, slotID).send({from: accounts[0]});
+              // setTimeout(this.getFactory, 3000);
+            }}>Plant {crop.name}</Button>);
+          }
+        }
+        return arr;
+      }
+      else {
+        return <div><Button onClick={(event) => {
+
+        }}>Water</Button><Button onClick={(event) => {
+
+        }}>Weed</Button><Button onClick={(event) => {
+
+        }}>Remove</Button><Button onClick={(event) => {
+
+        }}>Harvest</Button></div>
+      }
+    }
+  }
+
   render() {
     var itemList = this.state.slots;
+
+    if (itemList != null) {
+      console.log(itemList);
+      for (var i in itemList) {
+        var entry = itemList[i];
+        if (entry.cropID == "0") {
+          entry.name = "empty";
+        }
+        else {
+          entry.name = cropList[parseInt(entry.cropID) - 1];
+        }
+      }
+    }
+
     var cols = [
-      {title: "crop ID", dataIndex: "cropID"},
+      {title: "crop name", dataIndex: "name"},
       {title: "exp", dataIndex: "exp"},
       {title: "price", dataIndex: "price"}
-    ]
+    ];
 
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
@@ -169,6 +219,7 @@ class App extends Component {
         </Header>
         <Content style={{ padding: '0 50px' }}>
           <div className="site-layout-content">
+            <p>Balance: {this.state.balance}</p>
             {this.createUpdateCropListButton()}
             <Table onRow={this.onRowCallback} 
               dataSource={itemList} 
@@ -182,7 +233,7 @@ class App extends Component {
                 selectedRowKeys: this.state.selectedItem == null ? [] : [this.state.selectedItem.key]
               }}
             />
-            selected item: {this.state.selectedItem == null ? "" : this.state.selectedItem.key}
+            {this.createSlotManagementButtons()}
           </div>
           {this.createFarmButton()}
         </Content>
