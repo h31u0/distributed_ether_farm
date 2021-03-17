@@ -100,19 +100,21 @@ class App extends Component {
     const { accounts, contracts } = this.state;
 
     var contractOwner = await contracts.management.methods.owner().call({from: accounts[0]});
-    var tmp = await contracts.factory.methods.getFarmByOwner(accounts[0]).call({from: accounts[0]});
+    var tmp = await contracts.management.methods.getFarmByOwner(accounts[0]).call({from: accounts[0]});
     var results = []
 
     for (var i in tmp) {
       var tmpInt = parseInt(tmp[i]);
-      var tmp1 = await contracts.factory.methods.slots(tmpInt).call({from: accounts[0]});
+      var tmp1 = await contracts.management.methods.slots(tmpInt).call({from: accounts[0]});
+      console.log(tmp1)
       tmp1.key = tmpInt;
       results.push(tmp1);
     }
 
-    tmp = await contracts.factory.methods.OwnerMoneyCount(accounts[0]).call({from: accounts[0]});
+    tmp = await contracts.management.methods.OwnerMoneyCount(accounts[0]).call({from: accounts[0]});
     var ownerBalance = parseInt(tmp);
 
+    console.log(results);
     this.setState({ slots: results, owner: contractOwner, balance: ownerBalance });
   };
 
@@ -129,7 +131,7 @@ class App extends Component {
       return <Button disabled={this.state.createFarmButtonDisabled} onClick={(event) => {
         const { accounts, contracts } = this.state;
         this.setState({createFarmButtonDisabled: true});
-        contracts.factory.methods.createFarm().send({ from: accounts[0] });
+        contracts.management.methods.createFarm().send({ from: accounts[0] });
         setTimeout(this.getFactory, 3000);
       }}>Create Farm</Button>
     }
@@ -166,7 +168,7 @@ class App extends Component {
           if (selected.exp >= parseInt(crop.exp)) {
             arr.push(<Button key={i} onClick={(event) => {
               contracts.management.methods.plant(crop.id, slotID).send({from: accounts[0]});
-              // setTimeout(this.getFactory, 3000);
+              setTimeout(this.getFactory, 3000);
             }}>Plant {crop.name}</Button>);
           }
         }
@@ -190,14 +192,13 @@ class App extends Component {
     var itemList = this.state.slots;
 
     if (itemList != null) {
-      console.log(itemList);
       for (var i in itemList) {
         var entry = itemList[i];
         if (entry.cropID == "0") {
           entry.name = "empty";
         }
         else {
-          entry.name = cropList[parseInt(entry.cropID) - 1];
+          entry.name = cropList[parseInt(entry.cropID) - 1].name;
         }
       }
     }
