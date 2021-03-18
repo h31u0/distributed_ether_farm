@@ -11,6 +11,7 @@ contract SlotUpgrade is SlotUtils, Ownable{
         require(msg.value == levelUpFee);
         Slot storage mySlot = slots[_slotID];
         mySlot.exp += 10*getLevel(mySlot.exp+1);
+        emit createSlotEvent(msg.sender);
     }
     function withdraw() external onlyOwner {
         payable(owner()).transfer(address(this).balance);

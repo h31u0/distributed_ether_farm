@@ -13,25 +13,27 @@ const cropList = [
   {
     name: "apple",
     id: 1,
-    growTime: 150,
+    growTime: 30,
     exp: 0,
     price: 3
   },
   {
     name: "banana",
     id: 2,
-    growTime: 160,
+    growTime: 10,
     exp: 0,
     price: 1
   },
   {
     name: "pineapple",
     id: 3,
-    growTime: 140,
-    exp: 5,
-    price: 2
+    growTime: 200,
+    exp: 3,
+    price: 30
   }
 ]
+
+const levelUpFee = 1000000000000000;  // 10^15 wei = 0.001 ether
 
 class App extends Component {
   state = {
@@ -42,7 +44,7 @@ class App extends Component {
     contract: null,
     slots: null,
     createFarmButtonDisabled: false,
-    selectedItem: null
+    selectedKey: null
   };
 
   componentDidMount = async () => {
@@ -84,13 +86,13 @@ class App extends Component {
               entry.exp = parseInt(updatedSlot.exp);
               entry.stealed = updatedSlot.stealed;
               entry.cropID = parseInt(updatedSlot.cropID);
-              console.log(entry);
+              this.state.balance = parseInt(event.returnValues.balance);
             }
           }
 
           this.localStateUpdate();
         }
-      })
+      });
 
       slotManagementInstance.events.createSlotEvent({
         filter: {}, fromBlock: 0
@@ -99,7 +101,21 @@ class App extends Component {
           console.log(error);
         }
         else {
+          // if (event.returnValues.addr == this.state.accounts[0]) {
+          //   this.getFactory();
+          // }
           this.getFactory();
+        }
+      });
+
+      slotManagementInstance.events.updateCropList({
+        filter: {}, fromBlock: 0
+      }, (error, event) => {
+        if (error) {
+          console.log(error);
+        }
+        else {
+          console.log(event.returnValues);
         }
       })
 
@@ -143,12 +159,13 @@ class App extends Component {
     var ownerBalance = parseInt(tmp);
 
     this.setState({ slots: results, owner: contractOwner, balance: ownerBalance });
+    this.localStateUpdate();
   };
 
   onRowCallback = (record) => {
     return {
       onClick: event => {
-        this.setState({ selectedItem: record });
+        this.setState({ selectedKey: record.key });
       },
     };
   }
@@ -171,54 +188,71 @@ class App extends Component {
           var entry = cropList[i];
           contract.methods.modInCropsList(entry.id, entry.growTime, entry.price, entry.exp).send({from: accounts[0]});
         }
-        setTimeout(async () => {
-          for (var ii in cropList) {
-            var entry_in = cropList[ii];
-            var tmp = await contract.methods.cropsList(entry_in.id).call({from: accounts[0]});
-            console.log(tmp);
-          }
-        }, 5000);
       }}>Update Crop List</Button>
     }
   }
 
   createSlotManagementButtons = () => {
-    const { accounts, contract, balance } = this.state;
-    var selected = this.state.selectedItem;
-    if (selected != null) {
-      const slotID = selected.key;
-      if (selected.cropID == "0") {
-        var arr = [];
+    const { accounts, contract, balance, selectedKey, slots } = this.state;
+    var arr = [];
+    var selectedItem = null;
+
+    if (slots != null) {
+      for (var i in slots) {
+        var entry = slots[i];
+        if (entry.key == selectedKey) {
+          selectedItem = entry;
+          break;
+        }
+      }
+    }
+
+    // Buy new slot button
+    if (slots != null && slots.length != 0) {
+      arr.push(<Button key={1000} onClick={(event) => {
+        contract.methods.buySlot(1).send({from: accounts[0], value: levelUpFee});
+      }}>Purchase Slot</Button>)
+    }
+
+    if (selectedItem != null) {
+      // Upgrade slot button
+      arr.push(<Button key={999} onClick={(event) => {
+        // value is in wei, not ether
+        contract.methods.UpgradeSlot(selectedItem.key).send({from: accounts[0], value: levelUpFee});  // TODO: setLevelUpFee
+      }}>Upgrade Slot</Button>)
+    }
+
+    if (selectedItem != null) {
+      const slotID = selectedItem.key;
+      if (selectedItem.cropID == "0") {
         for (var i in cropList) {
           const crop = cropList[i];
-          if (selected.exp >= parseInt(crop.exp) && balance > crop.price) {
+          if (parseInt(selectedItem.exp) >= parseInt(crop.exp) && balance > crop.price) {
             arr.push(<Button key={i} onClick={(event) => {
               contract.methods.plant(crop.id, slotID).send({from: accounts[0]});
             }}>Plant {crop.name}</Button>);
           }
         }
-        return arr;
       }
-      else if (selected.harvestable) {
-        return <Button onClick={(event) => {
+      else if (selectedItem.harvestable) {
+        arr.push(<Button onClick={(event) => {
           contract.methods.harvest(slotID).send({from: accounts[0]});
-        }}>Harvest</Button>
+        }}>Harvest</Button>)
       }
       else {
-        var arr2 = [];
-        if (selected.dry) {
-          arr2.push(<Button key={0} onClick={(event) => {
+        if (selectedItem.dry) {
+          arr.push(<Button key={0} onClick={(event) => {
             contract.methods.watering(slotID).send({from: accounts[0]});
           }}>Water</Button>);
         }
-        if (selected.grass) {
-          arr2.push(<Button key={1} onClick={(event) => {
+        if (selectedItem.grass) {
+          arr.push(<Button key={1} onClick={(event) => {
             contract.methods.weeding(slotID).send({from: accounts[0]});
           }}>Weed</Button>);
         }
-        return arr2;
       }
     }
+    return arr;
   }
 
   localStateUpdate = () => {
@@ -237,7 +271,7 @@ class App extends Component {
         entry.count_down = "NA"
       }
       else if (timeStamp >= entry.grow_time) {
-        entry.count_down = 0;
+        entry.count_down = "✔";
         entry.harvestable = true;
       }
       else {
@@ -306,7 +340,7 @@ class App extends Component {
               bordered={true}
               rowSelection={{
                 type: "radio",
-                selectedRowKeys: this.state.selectedItem == null ? [] : [this.state.selectedItem.key]
+                selectedRowKeys: this.state.selectedKey == null ? [] : [this.state.selectedKey]
               }}
             />
             {this.createSlotManagementButtons()}

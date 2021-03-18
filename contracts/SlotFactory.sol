@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 contract SlotFactory{
     
-    event createSlotEvent(address indexed addr, uint[] cropIDs);
+    event createSlotEvent(address indexed addr);
 
     struct Slot {
         uint cropID;
@@ -29,15 +29,13 @@ contract SlotFactory{
         
     }
     function _createCrops(uint num) internal {
-        uint[] memory result = new uint[](num);
         for (uint256 index = 0; index < num; index++) {
             uint id = slots.length;
             slots.push(Slot(0, 0, 0, 0, 0, false, 1));
             slotToOwner[id] = msg.sender;
             OwnerSlotCount[msg.sender]++;
-            result[index] = id;
         }
-        emit createSlotEvent(msg.sender, result);
+        emit createSlotEvent(msg.sender);
     }
     function createFarm() public{
         require(OwnerSlotCount[msg.sender] == 0);
