@@ -62,6 +62,47 @@ class App extends Component {
         slotManagementNetwork && slotManagementNetwork.address
       )
 
+      // Event callback functions
+      slotManagementInstance.events.updateSlot({
+        filter: {}, fromBlock: 0
+      }, (error, event) => {
+        if (error) {
+          console.log(error);
+        }
+        else if (this.state.slots != null) {
+          const { slots } = this.state;
+          var updatedSlot = event.returnValues;
+
+          for (var i in slots) {
+            var entry = slots[i];
+            if (entry.key == parseInt(updatedSlot.slotID)) {
+              // dry_time, grass_time, grow_time, price, exp, stealed, cropID
+              entry.dry_time = parseInt(updatedSlot.dry_time);
+              entry.grass_time = parseInt(updatedSlot.grass_time);
+              entry.grow_time = parseInt(updatedSlot.grow_time);
+              entry.price = parseInt(updatedSlot.price);
+              entry.exp = parseInt(updatedSlot.exp);
+              entry.stealed = updatedSlot.stealed;
+              entry.cropID = parseInt(updatedSlot.cropID);
+              console.log(entry);
+            }
+          }
+
+          this.localStateUpdate();
+        }
+      })
+
+      slotManagementInstance.events.createSlotEvent({
+        filter: {}, fromBlock: 0
+      }, (error, event) => {
+        if (error) {
+          console.log(error);
+        }
+        else {
+          this.getFactory();
+        }
+      })
+
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
       this.setState({ web3, accounts, contract: slotManagementInstance}, this.getFactory);
@@ -87,19 +128,19 @@ class App extends Component {
       var tmpInt = parseInt(tmp[i]);
       var tmp1 = await contract.methods.slots(tmpInt).call({from: accounts[0]});
       tmp1.key = tmpInt;
+
       if (tmp1.cropID == "0") {
-        tmp1.price = 0;
+        tmp1.dry_time = 0;
         tmp1.grass_time = 0;
         tmp1.grow_time = 0;
-        tmp1.dry_time = 0;
+        tmp1.price = 0;
       }
+
       results.push(tmp1);
     }
 
     tmp = await contract.methods.OwnerMoneyCount(accounts[0]).call({from: accounts[0]});
     var ownerBalance = parseInt(tmp);
-
-    console.log(results)
 
     this.setState({ slots: results, owner: contractOwner, balance: ownerBalance });
   };
@@ -118,7 +159,6 @@ class App extends Component {
         const { accounts, contract } = this.state;
         this.setState({createFarmButtonDisabled: true});
         contract.methods.createFarm().send({ from: accounts[0] });
-        setTimeout(this.getFactory, 5000);
       }}>Create Farm</Button>
     }
   }
@@ -154,7 +194,6 @@ class App extends Component {
           if (selected.exp >= parseInt(crop.exp) && balance > crop.price) {
             arr.push(<Button key={i} onClick={(event) => {
               contract.methods.plant(crop.id, slotID).send({from: accounts[0]});
-              setTimeout(this.getFactory, 5000);
             }}>Plant {crop.name}</Button>);
           }
         }
@@ -163,7 +202,6 @@ class App extends Component {
       else if (selected.harvestable) {
         return <Button onClick={(event) => {
           contract.methods.harvest(slotID).send({from: accounts[0]});
-          setTimeout(this.getFactory, 5000);
         }}>Harvest</Button>
       }
       else {
@@ -171,13 +209,11 @@ class App extends Component {
         if (selected.dry) {
           arr2.push(<Button key={0} onClick={(event) => {
             contract.methods.watering(slotID).send({from: accounts[0]});
-            setTimeout(this.getFactory, 5000);
           }}>Water</Button>);
         }
         if (selected.grass) {
           arr2.push(<Button key={1} onClick={(event) => {
             contract.methods.weeding(slotID).send({from: accounts[0]});
-            setTimeout(this.getFactory, 5000);
           }}>Weed</Button>);
         }
         return arr2;
