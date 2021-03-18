@@ -39,7 +39,7 @@ contract SlotManagement is Friend, SlotUpgrade{
 
     function plant(uint _cropID, uint _slotID) external onlyOwnerOf(_slotID){
         Slot storage mySlot = slots[_slotID];
-        require(mySlot.cropID == 0 && OwnerMoneyCount[msg.sender] >= cropsList[_cropID].price && getLevel(mySlot.exp) >=cropsList[_cropID].exp);
+        require(mySlot.cropID == 0 && OwnerMoneyCount[msg.sender] >= cropsList[_cropID].price && (mySlot.exp + 10) >= cropsList[_cropID].exp);
         uint remainingBalance = OwnerMoneyCount[msg.sender] - (cropsList[_cropID].price);
         OwnerMoneyCount[msg.sender] = remainingBalance;
         mySlot.cropID = cropsList[_cropID].cropID;
@@ -54,21 +54,23 @@ contract SlotManagement is Friend, SlotUpgrade{
     function harvest(uint _slotID) public onlyOwnerOf(_slotID){
         Slot storage mySlot = slots[_slotID];
         require(_isReady(mySlot));
-        uint _tag = 5;
+        uint _tag = 2;
         if(mySlot.dry_time > mySlot.grow_time){
-            _tag --;
+            _tag ++;
         }
         if(mySlot.grass_time > mySlot.grow_time){
-            _tag --;
+            _tag ++;
         }
-        if(mySlot.stealed){
-            _tag --;
+        if(!mySlot.stealed){
+            _tag ++;
         }
         uint remainingBalance = OwnerMoneyCount[msg.sender] + (mySlot.price * _tag);
         OwnerMoneyCount[msg.sender] = remainingBalance;
         mySlot.cropID = 0;
         if(_tag == 5){
+           //mySlot.exp +=cropsList[mySlot.cropID].exp;
             mySlot.exp ++;
+
         }
         emit updateSlot(msg.sender, _slotID, 0, 0, 0, 0, 0, false, mySlot.exp, remainingBalance);
 
@@ -96,6 +98,5 @@ contract SlotManagement is Friend, SlotUpgrade{
         OwnerMoneyCount[msg.sender] = OwnerMoneyCount[msg.sender] + (mySlot.price);
         mySlot.stealed = true;
         emit updateSlot(msg.sender, _slotID, mySlot.cropID, mySlot.grow_time, mySlot.price, mySlot.dry_time, mySlot.grass_time, true, mySlot.exp, OwnerMoneyCount[msg.sender]);
-
     }
 }
