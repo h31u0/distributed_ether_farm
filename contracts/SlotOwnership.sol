@@ -14,6 +14,7 @@ contract SlotOwnership is SlotUtils, ERC721 {
         return slotToOwner[_slotID];
     }
     function _transfer(address _from, address _to, uint256 _slotID) override internal {
+        require(OwnerSlotCount[_from] > 6);
         OwnerSlotCount[_to]++;
         OwnerSlotCount[_from]--;
         slotToOwner[_slotID] = _to;
