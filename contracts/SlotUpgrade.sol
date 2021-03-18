@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-import "./SlotFactory.sol";
-contract SlotUpgrade is SlotFactory, Ownable{
+import "./SlotUtils.sol";
+contract SlotUpgrade is SlotUtils, Ownable{
     uint levelUpFee = 0.001 ether;
     function buySlot(uint _num) external payable {
         require(msg.value == levelUpFee *_num);
