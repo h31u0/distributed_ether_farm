@@ -58,7 +58,7 @@ contract Friend {
         return friendsDict[owner];
     }
 
-    function isFriend(address f1, address f2) external view returns (bool) {
+    function isFriend(address f1, address f2) internal view returns (bool) {
         if (contains(f1, f2)) {
             return true;
         }
