@@ -41,6 +41,7 @@ contract Friend {
         }
 
         friendsDict[owner].push(friend);
+        friendsDict[friend].push(owner);
         return true;
     }
 
@@ -53,11 +54,11 @@ contract Friend {
         return true;
     }
 
-    function getFrinedsByOwner(address owner) external view returns (address [] memory) {
+    function getFriendsByOwner(address owner) external view returns (address [] memory) {
         return friendsDict[owner];
     }
 
-    function isFriend(address f1, address f2) internal view returns (bool) {
+    function isFriend(address f1, address f2) external view returns (bool) {
         if (contains(f1, f2)) {
             return true;
         }
