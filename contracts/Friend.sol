@@ -36,7 +36,7 @@ contract Friend {
 
     function addFriend(address owner, address friend) external returns (bool) {
         // if owner and friend are already friends, return;
-        if (contains(owner, friend)) {
+        if (contains(owner, friend) || owner == friend || owner == address(0) || friend == address(0)) {
             return false;
         }
 
@@ -46,9 +46,10 @@ contract Friend {
     }
 
     function deleteFriend(address owner, address friend) external returns (bool) {
-        if (!contains(owner, friend)) {
+        if (!contains(owner, friend) || owner == friend || owner == address(0) || friend == address(0)) {
             return false;
         }
+
         removeFriend(owner, friend);
         removeFriend(friend, owner);
         return true;

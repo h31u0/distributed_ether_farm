@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import SlotManagementContract from "./contracts/SlotManagement.json";
+import FriendContract from "./contracts/Friend.json";
 import getWeb3 from "./getWeb3";
 import { Layout, Table, Button } from 'antd';
 import { BuildOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
+import Friend from './Friend.js'
 
 import "./App.css";
 
@@ -44,7 +46,8 @@ class App extends Component {
     contract: null,
     slots: null,
     createFarmButtonDisabled: false,
-    selectedKey: null
+    selectedKey: null,
+    friendContract: null
   };
 
   componentDidMount = async () => {
@@ -63,6 +66,14 @@ class App extends Component {
         SlotManagementContract.abi,
         slotManagementNetwork && slotManagementNetwork.address
       )
+
+      const FriendNetwork = FriendContract.networks[networkId];
+      const FriendInstance = new web3.eth.Contract(
+        FriendContract.abi,
+        FriendNetwork && FriendNetwork.address
+      );
+
+      this.setState({friendContract: FriendInstance});
 
       // Event callback functions
       slotManagementInstance.events.updateSlot({
@@ -346,6 +357,7 @@ class App extends Component {
             {this.createSlotManagementButtons()}
           </div>
           {this.createFarmButton()}
+          {<Friend accounts={this.state.accounts[0]} contract={this.state.friendContract}/>}
         </Content>
         <Footer style={{ textAlign: 'center' }}>CSC2125 DApp</Footer>
       </Layout>
