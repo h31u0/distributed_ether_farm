@@ -55,7 +55,8 @@ class App extends Component {
     friendList: [],
     isModalVisible: false,
     addFriendsInput: null,
-    viewOwner: null
+    viewOwner: null,
+    friendSlot: null
   };
 
   componentDidMount = async () => {
@@ -83,7 +84,7 @@ class App extends Component {
           console.log(error);
         }
         else if (this.state.slots != null) {
-          const { slots } = this.state;
+          const { slots, friendSlot} = this.state;
           var updatedSlot = event.returnValues;
 
           for (var i in slots) {
@@ -100,8 +101,24 @@ class App extends Component {
               this.state.balance = parseInt(event.returnValues.balance);
             }
           }
+ 
+          for (var i in friendSlot) {
+            var entry = friendSlot[i];
+            if (entry.key == parseInt(updatedSlot.slotID)) {
+              // dry_time, grass_time, grow_time, price, exp, stealed, cropID
+              entry.dry_time = parseInt(updatedSlot.dry_time);
+              entry.grass_time = parseInt(updatedSlot.grass_time);
+              entry.grow_time = parseInt(updatedSlot.grow_time);
+              entry.price = parseInt(updatedSlot.price);
+              entry.exp = parseInt(updatedSlot.exp);
+              entry.stealed = updatedSlot.stealed;
+              entry.cropID = parseInt(updatedSlot.cropID);
+              this.state.balance = parseInt(event.returnValues.balance);
+            }
+          }
 
           this.localStateUpdate();
+          this.updateFriendSlotState();
         }
       });
 
@@ -133,7 +150,7 @@ class App extends Component {
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
       this.setState({ web3, accounts, contract: slotManagementInstance}, this.getFactory);
-
+      
       setInterval(this.localStateUpdate, 1000);
     } catch (error) {
       // Catch any errors for any of the above operations.
@@ -267,7 +284,10 @@ class App extends Component {
   }
 
   localStateUpdate = async () => {
-    const { slots, contract, accounts } = this.state;
+    const { slots, contract, accounts, viewOwner } = this.state;
+    if (viewOwner != accounts[0]) {
+      return;
+    }
     const timeStamp = Date.parse(new Date()) / 1000;
     if (slots == null) return;
 
@@ -358,8 +378,102 @@ class App extends Component {
     if (event.key) this.setState({viewOwner: event.key});
   }
 
+  updateFriendSlot = async () => {
+    const { accounts, contract, viewOwner } = this.state;
+
+    var tmp = await contract.methods.getFarmByOwner(viewOwner).call({from: accounts[0]});
+    var results = []
+
+    for (var i in tmp) {
+      var tmpInt = parseInt(tmp[i]);
+      var tmp1 = await contract.methods.slots(tmpInt).call({from: accounts[0]});
+      tmp1.key = tmpInt;
+
+      if (tmp1.cropID == "0") {
+        tmp1.dry_time = 0;
+        tmp1.grass_time = 0;
+        tmp1.grow_time = 0;
+        tmp1.price = 0;
+      }
+
+      results.push(tmp1);
+    }
+
+    this.setState({friendSlot: results});
+  };
+
+  updateFriendSlotState = async () => {
+    const { friendSlot, contract, accounts } = this.state;
+    const timeStamp = Date.parse(new Date()) / 1000;
+    if (friendSlot == null) return;
+
+    for (var i in friendSlot) {
+      var entry = friendSlot[i];
+      entry.dry = false;
+      entry.grass = false;
+      entry.harvestable = false;
+      entry.status = []
+      // grow_time, grass_time, dry_time
+      if (entry.grow_time == 0) {
+        entry.count_down = "NA"
+      }
+      else if (timeStamp >= entry.grow_time) {
+        entry.count_down = "✔";
+        entry.harvestable = true;
+      }
+      else {
+        entry.count_down = entry.grow_time - timeStamp;
+      }
+
+      if (entry.grow_time != 0) {
+        if (entry.grass_time <= timeStamp) {
+          entry.grass = true;
+          entry.status.push("grass")
+        }
+        if (entry.dry_time <= timeStamp) {
+          entry.dry = true;
+          entry.status.push("dry")
+        }
+      }
+    }
+  }
+
+  createDeleteStealButton = () => {
+    const { slots, friendSlot, viewOwner, accounts, contract, selectedKey} = this.state;
+    var arr = [];
+    var selectedItem = null;
+    if (accounts[0] == viewOwner) {
+      return;
+    }
+    if (friendSlot != null) {
+      for (var i in friendSlot) {
+        var entry = friendSlot[i];
+        if (entry.key == selectedKey) {
+          selectedItem = entry;
+          break;
+        }
+      }
+    }
+
+    if (selectedItem != null && selectedItem.harvestable) {
+      arr.push(
+        <Button onClick={(event) => {
+          contract.methods.steal(selectedItem.key).send({from: accounts[0]});
+          this.updateFriendSlot();
+          this.updateFriendSlotState();
+        }}>Steal</Button>
+      )
+    }
+
+    arr.push(<Button onClick={() => {
+      contract.methods.deleteFriend(accounts[0], viewOwner).send({from: accounts[0]});
+      this.setState({viewOwner: accounts[0]});
+    }}>Delete Friend</Button>);
+    return arr;
+  }
+
   createFarmContent = () => {
-    const { slots, viewOwner, accounts, contract } = this.state;
+    const { slots, friendSlot, viewOwner, accounts, contract } = this.state;
     if (accounts[0] == viewOwner) {
       return (
         <div className="site-layout-content">
@@ -382,18 +496,40 @@ class App extends Component {
       );
     }
     else {
+      if (viewOwner != null) {
+        this.updateFriendSlot();
+        this.updateFriendSlotState();
+      }
       // TODO: Render friend's farm
       return (
-        <Button onClick={() => {
-          contract.methods.deleteFriend(accounts[0], viewOwner).send({from: accounts[0]});
-          this.setState({viewOwner: accounts[0]});
-        }}>Delete Friend</Button>
+        <div className="site-layout-content">
+        <p>Balance: {this.state.balance}</p>
+        {this.createUpdateCropListButton()}
+        <Table onRow={this.onRowCallback} 
+          dataSource={friendSlot} 
+          columns={cols} 
+          pagination={false} 
+          showHeader={true} 
+          style={{cursor:"pointer"}} 
+          bordered={true}
+          rowSelection={{
+            type: "radio",
+            selectedRowKeys: this.state.selectedKey == null ? [] : [this.state.selectedKey]
+          }}
+        />
+        {this.createDeleteStealButton()}
+      </div>
       );
     }
   }
 
   render() {
-    var itemList = this.state.slots;
+    if (this.state.accounts == this.state.viewOwner) {
+      var itemList = this.state.slots;
+    } else {
+      var itemList = this.state.friendSlot;
+    }
+
 
     if (itemList != null) {
       for (var i in itemList) {
@@ -403,8 +539,10 @@ class App extends Component {
         }
         else {
           entry.name = cropList[parseInt(entry.cropID) - 1].name;
-          if (entry.dry || entry.grass) {
-            entry.name = entry.name + " (" + entry.status.toString() + ")";
+          if (this.state.accounts == this.state.viewOwner) {
+            if (entry.dry || entry.grass) {
+              entry.name = entry.name + " (" + entry.status.toString() + ")";
+            }
           }
         }
       }
