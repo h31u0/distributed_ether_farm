@@ -1,13 +1,9 @@
 import React, { Component } from "react";
-import FriendContract from "./contracts/Friend.json";
 import getWeb3 from "./getWeb3";
-import { Layout, Table, Button } from 'antd';
-import { BuildOutlined } from '@ant-design/icons';
+import { Menu, Button } from 'antd';
 import 'antd/dist/antd.css';
 import Web3 from "web3";
 import "./App.css";
-
-const { Header, Content, Footer } = Layout;
 
 
 class Friend extends Component {
@@ -101,51 +97,67 @@ class Friend extends Component {
     this.setState({FriendsList: results});
   }
 
+  createFriendsMenu = () => {
+    var menuItems = [];
+    var arr = [];
+
+    menuItems.push("My Farm");
+    for (var i in menuItems) {
+      arr.push(<Menu.Item key={i}>{menuItems[i]}</Menu.Item>)
+    }
+
+    return arr;
+  }
     
   render() {
     return (
-      <React.Fragment>
-        <form>
-          <label htmlFor="Friend to add"> </label>
-          <input
-            type="text"
-            name="Friend to add"
-            value={this.state.addFriendsInput}
-            onChange={this.handleAddChange}
-          />
-        </form>
-        {this.addFriendButton()}
-        <form>
-          <label htmlFor="Friend to delete"> </label>
-          <input
-            type="text"
-            name="Friend to delete"
-            value={this.state.deleteFriendsInput}
-            onChange={this.handleDeleteChange}
-          />
-        </form>
-        {this.deleteFriendButton()}
-
-
-        {/* <div className="container">
-        <p>Your account: {this.state.accounts}</p>
-
-        </div> */}
-        {/* <h3>Friends to Add: {this.state.addFriendsInput}</h3>
-        <h3>Friends to Delete: {this.state.deleteFriendsInput}</h3> */}
-        <div>
-
-        <h3> Friend List: </h3>
-
-              <div>
-        <Button onClick={this._onButtonClick}>Show Friend List</Button>
-        {       <ul>{this.displayList()}</ul>
-        }
-      </div>
-
-      </div>
-      </React.Fragment>
+      <Menu theme="dark" mode="inline" defaultSelectedKeys={['0']}>
+        {this.createFriendsMenu()}
+      </Menu>
     );
+    // return (
+    //   <React.Fragment>
+    //     <form>
+    //       <label htmlFor="Friend to add"> </label>
+    //       <input
+    //         type="text"
+    //         name="Friend to add"
+    //         value={this.state.addFriendsInput}
+    //         onChange={this.handleAddChange}
+    //       />
+    //     </form>
+    //     {this.addFriendButton()}
+    //     <form>
+    //       <label htmlFor="Friend to delete"> </label>
+    //       <input
+    //         type="text"
+    //         name="Friend to delete"
+    //         value={this.state.deleteFriendsInput}
+    //         onChange={this.handleDeleteChange}
+    //       />
+    //     </form>
+    //     {this.deleteFriendButton()}
+
+
+    //     {/* <div className="container">
+    //     <p>Your account: {this.state.accounts}</p>
+
+    //     </div> */}
+    //     {/* <h3>Friends to Add: {this.state.addFriendsInput}</h3>
+    //     <h3>Friends to Delete: {this.state.deleteFriendsInput}</h3> */}
+    //     <div>
+
+    //     <h3> Friend List: </h3>
+
+    //           <div>
+    //     <Button onClick={this._onButtonClick}>Show Friend List</Button>
+    //     {       <ul>{this.displayList()}</ul>
+    //     }
+    //   </div>
+
+    //   </div>
+    //   </React.Fragment>
+    // );
   }
 }
 

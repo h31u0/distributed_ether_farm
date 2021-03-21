@@ -1,15 +1,13 @@
 import React, { Component } from "react";
 import SlotManagementContract from "./contracts/SlotManagement.json";
-import FriendContract from "./contracts/Friend.json";
 import getWeb3 from "./getWeb3";
-import { Layout, Table, Button } from 'antd';
+import { Modal, Layout, Table, Button, Menu } from 'antd';
 import { BuildOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
-import Friend from './Friend.js'
 
 import "./App.css";
 
-const { Header, Content, Footer } = Layout;
+const { Header, Content, Footer, Sider } = Layout;
 
 const cropList = [
   {
@@ -37,6 +35,13 @@ const cropList = [
 
 const levelUpFee = 1000000000000000;  // 10^15 wei = 0.001 ether
 
+const cols = [
+  {title: "crop name", dataIndex: "name"},
+  {title: "exp", dataIndex: "exp"},
+  {title: "price", dataIndex: "price"},
+  {title: "time to harvest", dataIndex: "count_down"}
+];
+
 class App extends Component {
   state = {
     owner: null,
@@ -47,7 +52,10 @@ class App extends Component {
     slots: null,
     createFarmButtonDisabled: false,
     selectedKey: null,
-    friendContract: null
+    friendList: [],
+    isModalVisible: false,
+    addFriendsInput: null,
+    viewOwner: null
   };
 
   componentDidMount = async () => {
@@ -66,14 +74,6 @@ class App extends Component {
         SlotManagementContract.abi,
         slotManagementNetwork && slotManagementNetwork.address
       )
-
-      const FriendNetwork = FriendContract.networks[networkId];
-      const FriendInstance = new web3.eth.Contract(
-        FriendContract.abi,
-        FriendNetwork && FriendNetwork.address
-      );
-
-      this.setState({friendContract: FriendInstance});
 
       // Event callback functions
       slotManagementInstance.events.updateSlot({
@@ -169,7 +169,7 @@ class App extends Component {
     tmp = await contract.methods.OwnerMoneyCount(accounts[0]).call({from: accounts[0]});
     var ownerBalance = parseInt(tmp);
 
-    this.setState({ slots: results, owner: contractOwner, balance: ownerBalance });
+    this.setState({ slots: results, owner: contractOwner, balance: ownerBalance, viewOwner: accounts[0]});
     this.localStateUpdate();
   };
 
@@ -182,9 +182,9 @@ class App extends Component {
   }
 
   createFarmButton = () => {
-    if (this.state.slots != null && this.state.slots.length == 0) {
+    const { slots, viewOwner, accounts, contract } = this.state;
+    if (slots != null && slots.length == 0 && viewOwner == accounts[0]) {
       return <Button disabled={this.state.createFarmButtonDisabled} onClick={(event) => {
-        const { accounts, contract } = this.state;
         this.setState({createFarmButtonDisabled: true});
         contract.methods.createFarm().send({ from: accounts[0] });
       }}>Create Farm</Button>
@@ -266,8 +266,8 @@ class App extends Component {
     return arr;
   }
 
-  localStateUpdate = () => {
-    const { slots } = this.state;
+  localStateUpdate = async () => {
+    const { slots, contract, accounts } = this.state;
     const timeStamp = Date.parse(new Date()) / 1000;
     if (slots == null) return;
 
@@ -301,7 +301,95 @@ class App extends Component {
       }
     }
 
-    this.setState({ slots: slots });
+    var fl = await contract.methods.getFriendsByOwner(accounts[0]).call({from: accounts[0]});
+
+    this.setState({ slots: slots, friendList: fl });
+  }
+
+  createFriendsMenu = () => {
+    const { friendList, contract, accounts, addFriendsInput } = this.state;
+
+    var menuItems = [];
+    var arr = [];
+
+    menuItems.push({ name: "My Farm", key: accounts[0] });
+
+    for (var i in friendList) {
+      var entry = friendList[i];
+      menuItems.push({ name: entry, key: entry })
+    }
+
+    for (var i in menuItems) {
+      var entry = menuItems[i];
+      arr.push(<Menu.Item key={entry.key}>{entry.name}</Menu.Item>);
+    }
+
+    arr.push(<Button onClick={() => {this.setState({ isModalVisible: true })}}>+ Add Friend</Button>)
+    arr.push(
+    <Modal title="Add Friend" visible={this.state.isModalVisible} onOk={async () => {
+      console.log(this.state.addFriendsInput);
+      var tmp = false;
+      try {
+        tmp = await contract.methods.addFriend(accounts[0], addFriendsInput).send({from: accounts[0]});
+      }
+      catch {
+        // TODO: Show invalid address message
+      }
+      console.log(tmp);
+      this.setState({ isModalVisible: false });
+    }} onCancel={() => {
+      this.setState({ isModalVisible: false });
+    }}>
+      <form>
+        Friend Address: <label htmlFor="Friend to add"> </label>
+        <input
+          type="text"
+          name="Friend to add"
+          value={this.state.addFriendsInput}
+          onChange={(event) => {this.state.addFriendsInput = event.target.value;}}
+        />
+      </form>
+    </Modal>)
+
+    return arr;
+  }
+
+  handleFriendMenuClick = (event) => {
+    this.setState({viewOwner: event.key});
+  }
+
+  createFarmContent = () => {
+    const { slots, viewOwner, accounts, contract } = this.state;
+    if (accounts[0] == viewOwner) {
+      return (
+        <div className="site-layout-content">
+          <p>Balance: {this.state.balance}</p>
+          {this.createUpdateCropListButton()}
+          <Table onRow={this.onRowCallback} 
+            dataSource={slots} 
+            columns={cols} 
+            pagination={false} 
+            showHeader={true} 
+            style={{cursor:"pointer"}} 
+            bordered={true}
+            rowSelection={{
+              type: "radio",
+              selectedRowKeys: this.state.selectedKey == null ? [] : [this.state.selectedKey]
+            }}
+          />
+          {this.createSlotManagementButtons()}
+        </div>
+      );
+    }
+    else {
+      // TODO: Render friend's farm
+      return (
+        <Button onClick={() => {
+          contract.methods.deleteFriend(accounts[0], viewOwner).send({from: accounts[0]});
+          this.setState({viewOwner: accounts[0]});
+        }}>Delete Friend</Button>
+      );
+    }
   }
 
   render() {
@@ -322,13 +410,6 @@ class App extends Component {
       }
     }
 
-    var cols = [
-      {title: "crop name", dataIndex: "name"},
-      {title: "exp", dataIndex: "exp"},
-      {title: "price", dataIndex: "price"},
-      {title: "time to harvest", dataIndex: "count_down"}
-    ];
-
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
@@ -338,28 +419,20 @@ class App extends Component {
           <BuildOutlined style={{ color:"white", fontSize:"200%", paddingInline: '0 25px'  }} />
           Account ID: {this.state.accounts[0]}
         </Header>
-        <Content style={{ padding: '0 50px' }}>
-          <div className="site-layout-content">
-            <p>Balance: {this.state.balance}</p>
-            {this.createUpdateCropListButton()}
-            <Table onRow={this.onRowCallback} 
-              dataSource={itemList} 
-              columns={cols} 
-              pagination={false} 
-              showHeader={true} 
-              style={{cursor:"pointer"}} 
-              bordered={true}
-              rowSelection={{
-                type: "radio",
-                selectedRowKeys: this.state.selectedKey == null ? [] : [this.state.selectedKey]
-              }}
-            />
-            {this.createSlotManagementButtons()}
-          </div>
-          {this.createFarmButton()}
-          {<Friend accounts={this.state.accounts[0]} contract={this.state.friendContract}/>}
-        </Content>
-        <Footer style={{ textAlign: 'center' }}>CSC2125 DApp</Footer>
+        <Layout>
+          <Sider>
+            <Menu theme="dark" mode="inline" defaultSelectedKeys={[this.state.accounts[0]]} onClick={this.handleFriendMenuClick}>
+              {this.createFriendsMenu()}
+            </Menu>
+          </Sider>
+          <Layout>
+            <Content style={{ padding: '0 50px' }}>
+              {this.createFarmContent()}
+              {this.createFarmButton()}
+            </Content>
+            <Footer style={{ textAlign: 'center' }}>CSC2125 DApp</Footer>
+          </Layout>
+        </Layout>
       </Layout>
     );
   }
