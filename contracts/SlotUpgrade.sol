@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 import "./SlotUtils.sol";
-contract SlotUpgrade is SlotUtils, Ownable{
+contract SlotUpgrade is SlotUtils{
     uint levelUpFee = 0.001 ether;
     function buySlot(uint _num) external payable {
         require(msg.value == levelUpFee *_num);
@@ -10,7 +10,8 @@ contract SlotUpgrade is SlotUtils, Ownable{
     function UpgradeSlot(uint _slotID) external payable {
         require(msg.value == levelUpFee);
         Slot storage mySlot = slots[_slotID];
-        mySlot.exp += 10*getLevel(mySlot.exp+1);
+        require(getLevel(mySlot.exp) < levelList.length-1);
+        mySlot.exp = levelList[getLevel(mySlot.exp)+1];
         emit createSlotEvent(msg.sender);
     }
     function withdraw() external onlyOwner {

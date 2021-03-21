@@ -52,13 +52,13 @@ contract SlotFactory{
         }
         return result;
     }
-    function getLevel(uint exp) public pure returns (uint) {
-        uint a = exp;
-        uint res = 0;
-        while(a != 0){
-            a = a/10;
-            res++;
-        }
-        return res;
-    }
+    // function getLevel(uint exp) public pure returns (uint) {
+    //     uint a = exp;
+    //     uint res = 0;
+    //     while(a != 0){
+    //         a = a/10;
+    //         res++;
+    //     }
+    //     return res;
+    // }
 }
