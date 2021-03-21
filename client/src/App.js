@@ -355,7 +355,7 @@ class App extends Component {
   }
 
   handleFriendMenuClick = (event) => {
-    this.setState({viewOwner: event.key});
+    if (event.key) this.setState({viewOwner: event.key});
   }
 
   createFarmContent = () => {
