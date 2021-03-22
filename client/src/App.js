@@ -455,7 +455,7 @@ class App extends Component {
       }
     }
 
-    if (selectedItem != null && selectedItem.harvestable) {
+    if (selectedItem != null && selectedItem.harvestable && !selectedItem.stealed) {
       arr.push(
         <Button onClick={(event) => {
           contract.methods.steal(selectedItem.key).send({from: accounts[0]});
@@ -542,6 +542,10 @@ class App extends Component {
           if (this.state.accounts == this.state.viewOwner) {
             if (entry.dry || entry.grass) {
               entry.name = entry.name + " (" + entry.status.toString() + ")";
+            }
+          } else {
+            if (entry.stealed) {
+              entry.name = entry.name + " (stolen)";
             }
           }
         }
