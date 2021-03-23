@@ -33,6 +33,8 @@ const cropList = [
   }
 ]
 
+const levelList = [0, 10, 25, 50, 100];
+
 const levelUpFee = 1000000000000000;  // 10^15 wei = 0.001 ether
 
 const cols = [
@@ -208,16 +210,26 @@ class App extends Component {
     }
   }
 
-  createUpdateCropListButton = () => {
+  createOwnerUtilsButton = () => {
+    const { accounts, contract } = this.state;
+    var arr = [];
     if (this.state.owner == this.state.accounts[0]) {
-      return <Button onClick={(event) => {
-        const { accounts, contract } = this.state;
+      arr.push(<Button key={0} onClick={(event) => {
         for (var i in cropList) {
           var entry = cropList[i];
           contract.methods.modInCropsList(entry.id, entry.growTime, entry.price, entry.exp).send({from: accounts[0]});
         }
-      }}>Update Crop List</Button>
+      }}>Update Crop List</Button>);
+
+      arr.push(<Button key={1} onClick={(event) => {
+        for (var i in levelList) {
+          var entry = levelList[i];
+          contract.methods.addInLevelList(entry).send({from: accounts[0]});
+        }
+      }}>Update Level List</Button>);
     }
+
+    return arr;
   }
 
   createSlotManagementButtons = () => {
@@ -478,7 +490,7 @@ class App extends Component {
       return (
         <div className="site-layout-content">
           <p>Balance: {this.state.balance}</p>
-          {this.createUpdateCropListButton()}
+          {this.createOwnerUtilsButton()}
           <Table onRow={this.onRowCallback} 
             dataSource={slots} 
             columns={cols} 
@@ -504,7 +516,7 @@ class App extends Component {
       return (
         <div className="site-layout-content">
         <p>Balance: {this.state.balance}</p>
-        {this.createUpdateCropListButton()}
+        {this.createOwnerUtilsButton()}
         <Table onRow={this.onRowCallback} 
           dataSource={friendSlot} 
           columns={cols} 

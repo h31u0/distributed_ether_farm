@@ -11,7 +11,7 @@ contract SlotUpgrade is SlotUtils{
         require(msg.value == levelUpFee);
         Slot storage mySlot = slots[_slotID];
         require(getLevel(mySlot.exp) < levelList.length-1);
-        mySlot.exp = levelList[getLevel(mySlot.exp)+1];
+        mySlot.exp = levelList[getLevel(mySlot.exp)];
         emit createSlotEvent(msg.sender);
     }
     function withdraw() external onlyOwner {
