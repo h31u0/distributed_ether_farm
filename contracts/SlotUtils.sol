@@ -19,18 +19,26 @@ contract SlotUtils is SlotFactory, Ownable{
     }
     
     function addInLevelList(uint _exp) external onlyOwner{
-        require(_exp > levelList[levelList.length-1]);
+        require(levelList.length == 0 || _exp > levelList[levelList.length-1]);
         levelList.push(_exp);
+        // emit updateLevelList(levelList.length-1, _exp);
+    }
+    function initLevelList() external onlyOwner{
+        require(levelList.length == 0);
+        levelList.push(0); //level 0
+        levelList.push(5); //level 0-1
+        levelList.push(10); // level 1-2
         // emit updateLevelList(levelList.length-1, _exp);
     }
     function getLevel(uint exp) public view returns (uint) {
         for (uint i=0; i<levelList.length; i++) {
-            if(exp>levelList[i]){
+            if(exp<levelList[i]){
                 return i;
             }
         }
-        return 0;
+        return levelList.length;
     }
+
 
     modifier onlyOwnerOf(uint _slotID) {
         require(msg.sender == slotToOwner[_slotID]);
