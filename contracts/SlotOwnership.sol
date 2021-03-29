@@ -2,8 +2,9 @@
 pragma solidity ^0.8.0;
 import "./SlotUpgrade.sol";
 import "./SlotUtils.sol";
+import "./SlotManagement.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-contract SlotOwnership is SlotUtils, ERC721 {
+contract SlotOwnership is SlotUtils, ERC721, SlotManagement {
     mapping (uint => address) slotApprovals;
     constructor() public ERC721("Slot", "FAM") {}
     

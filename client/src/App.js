@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import SlotManagementContract from "./contracts/SlotManagement.json";
+import SlotMarketContract from "./contracts/SlotMarket.json";
 import getWeb3 from "./getWeb3";
 import { Modal, Layout, Table, Button, Menu } from 'antd';
 import { BuildOutlined } from '@ant-design/icons';
@@ -56,7 +56,9 @@ class App extends Component {
     selectedKey: null,
     friendList: [],
     isModalVisible: false,
-    addFriendsInput: null,
+    isSellSlotModalVisible: false,
+    addFriendsInput: "",
+    sellSlotInput: "",
     viewOwner: null,
     friendSlot: null
   };
@@ -72,14 +74,14 @@ class App extends Component {
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
 
-      const slotManagementNetwork = SlotManagementContract.networks[networkId];
-      const slotManagementInstance = new web3.eth.Contract(
-        SlotManagementContract.abi,
-        slotManagementNetwork && slotManagementNetwork.address
+      const slotMarketNetwork = SlotMarketContract.networks[networkId];
+      const slotMarketInstance = new web3.eth.Contract(
+        SlotMarketContract.abi,
+        slotMarketNetwork && slotMarketNetwork.address
       )
 
       // Event callback functions
-      slotManagementInstance.events.updateSlot({
+      slotMarketInstance.events.updateSlot({
         filter: {}, fromBlock: 0
       }, (error, event) => {
         if (error) {
@@ -124,7 +126,7 @@ class App extends Component {
         }
       });
 
-      slotManagementInstance.events.createSlotEvent({
+      slotMarketInstance.events.createSlotEvent({
         filter: {}, fromBlock: 0
       }, (error, event) => {
         if (error) {
@@ -138,7 +140,7 @@ class App extends Component {
         }
       });
 
-      slotManagementInstance.events.updateCropList({
+      slotMarketInstance.events.updateCropList({
         filter: {}, fromBlock: 0
       }, (error, event) => {
         if (error) {
@@ -149,9 +151,20 @@ class App extends Component {
         }
       })
 
+      slotMarketInstance.events.TradeStatusChange({
+        filter: {}, fromBlock: 0
+      }, (error, event) => {
+        if (error) {
+          console.log(error);
+        }
+        else {
+          this.getFactory();
+        }
+      })
+
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: slotManagementInstance}, this.getFactory);
+      this.setState({ web3, accounts, contract: slotMarketInstance}, this.getFactory);
       
       setInterval(this.localStateUpdate, 1000);
     } catch (error) {
@@ -265,6 +278,36 @@ class App extends Component {
     if (selectedItem != null) {
       const slotID = selectedItem.key;
       if (selectedItem.cropID == "0") {
+        // Slot is empty
+        // Create sell slot button
+        if (slots.length > 6) {
+          arr.push(<Button key={998} onClick={(event) => {
+            this.setState({ isSellSlotModalVisible: true });
+          }}>Sell on Market</Button>);
+          arr.push(<Modal title="Sell Slot" visible={this.state.isSellSlotModalVisible} onOk={() => {
+            try {
+              contract.methods.openTrade(slotID, this.state.sellSlotInput).send({ from:accounts[0] });
+            }
+            catch (err) {
+              // TODO: Show invalid number message
+              console.log(err);
+            }
+            this.setState({ isSellSlotModalVisible: false });
+          }} onCancel={() => {
+            this.setState({ isSellSlotModalVisible: false });
+          }}>
+            slot price (in Wei): <label htmlFor="Slot to sell"> </label>
+            <input
+              type="text"
+              name="Slot to sell"
+              value={this.state.sellSlotInput}
+              onChange={(event) => {
+                this.setState({sellSlotInput: event.target.value});
+              }}
+            /></Modal>)
+        }
+
+        // Create plant buttons
         for (var i in cropList) {
           const crop = cropList[i];
           if (parseInt(selectedItem.exp) >= parseInt(crop.exp) && balance > crop.price) {
@@ -378,7 +421,9 @@ class App extends Component {
           type="text"
           name="Friend to add"
           value={this.state.addFriendsInput}
-          onChange={(event) => {this.state.addFriendsInput = event.target.value;}}
+          onChange={(event) => {
+            this.setState({addFriendsInput: event.target.value});
+          }}
         />
       </form>
     </Modal>)
