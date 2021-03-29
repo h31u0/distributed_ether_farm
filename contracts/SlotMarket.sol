@@ -1,7 +1,8 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "./SlotOwnership.sol";
 
 /**
  * @title Classifieds
@@ -11,10 +12,10 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
  * implemented. The item tokenization is responsibility of the ERC721 contract
  * which should encode any item details.
  */
-contract SlotMarket {
+contract SlotMarket is SlotOwnership{
     event TradeStatusChange(uint256 ad, bytes32 status);
 
-    IERC721 itemToken;
+    // IERC721 itemToken;
 
     struct Trade {
         address poster;
@@ -25,12 +26,12 @@ contract SlotMarket {
 
     mapping(uint256 => Trade) public trades;
 
-    uint256 tradeCounter;
+    uint256 tradeCounter = 0;
 
-    constructor(address _itemTokenAddress) public {
-        itemToken = IERC721(_itemTokenAddress);
-        tradeCounter = 0;
-    }
+    // constructor(address _itemTokenAddress) public {
+    //     itemToken = IERC721(_itemTokenAddress);
+    //     tradeCounter = 0;
+    // }
 
     /**
      * @dev Returns the details for a trade.
@@ -57,7 +58,7 @@ contract SlotMarket {
      * @param _price The amount of currency for which to trade the item.
      */
     function openTrade(uint256 _item, uint256 _price) public  {
-        itemToken.transferFrom(msg.sender, address(this), _item);
+        transferFrom(msg.sender, address(this), _item);
         trades[tradeCounter] = Trade({
             poster: msg.sender,
             item: _item,
@@ -79,7 +80,7 @@ contract SlotMarket {
         require(trade.status == "Open", "Trade is not Open.");
         require(msg.value == trade.price);
         payable(trade.poster).transfer(trade.price);
-        itemToken.transferFrom(address(this), msg.sender, trade.item);
+        transferFrom(address(this), msg.sender, trade.item);
         trades[_trade].status = "Executed";
         emit TradeStatusChange(_trade, "Executed");
     }
@@ -95,7 +96,7 @@ contract SlotMarket {
             "Trade can be cancelled only by poster."
         );
         require(trade.status == "Open", "Trade is not Open.");
-        itemToken.transferFrom(address(this), trade.poster, trade.item);
+        transferFrom(address(this), trade.poster, trade.item);
         trades[_trade].status = "Cancelled";
         emit TradeStatusChange(_trade, "Cancelled");
     }
