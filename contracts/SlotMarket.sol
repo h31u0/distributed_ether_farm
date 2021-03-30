@@ -33,6 +33,10 @@ contract SlotMarket is SlotOwnership{
     //     tradeCounter = 0;
     // }
 
+    function getTradeCounter() public view returns(uint){
+        return tradeCounter;
+    }
+
     /**
      * @dev Returns the details for a trade.
      * @param _trade The id for the trade.
