@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import SlotMarketContract from "./contracts/SlotMarket.json";
 import getWeb3 from "./getWeb3";
 import { Modal, Layout, Table, Button, Menu } from 'antd';
-import { BuildOutlined } from '@ant-design/icons';
+import { BuildOutlined, ConsoleSqlOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
+import Web3 from "web3";
 
 import "./App.css";
 
@@ -44,6 +45,12 @@ const cols = [
   {title: "time to harvest", dataIndex: "count_down"}
 ];
 
+const marketCols = [
+  {title: "price", dataIndex: "price"},
+  {title: "exp", dataIndex:"exp"},
+  {title: "poster", dataIndex:"poster"}
+];
+
 class App extends Component {
   state = {
     owner: null,
@@ -60,7 +67,8 @@ class App extends Component {
     addFriendsInput: "",
     sellSlotInput: "",
     viewOwner: null,
-    friendSlot: null
+    friendSlot: null,
+    slotsOnMarket: null
   };
 
   componentDidMount = async () => {
@@ -158,7 +166,8 @@ class App extends Component {
           console.log(error);
         }
         else {
-          this.getFactory();
+          this.getMarket();
+          this.getFactory()
         }
       })
 
@@ -176,6 +185,97 @@ class App extends Component {
     }
   };
 
+  getMarket = async() => {
+    const { accounts, contract} = this.state;
+    var results = [];
+    console.log("Starttttttt")
+    
+    // var count = await contract.methods.tradeCounter().call({from: accounts[0]});
+    // var num = parseInt(count);
+    for (var i = 0; i <= 100; i++) {
+      var temp = await contract.methods.trades(i).call({from: accounts[0]});
+      if (temp == null) {
+        break;
+      }
+      var poster = temp[0];
+      var item = parseInt(temp[1]);
+      var price = parseInt(temp[2]);
+      var status = temp[3];
+ 
+      temp.tradeIdx = i;
+      temp.key = item
+      var slt = await contract.methods.slots(item).call({from: accounts[0]});
+      if (Web3.utils.toAscii(status).slice(0, 4)=="Open") {
+        temp.exp = slt.exp;
+        temp.price = price;
+        temp.item = item;
+        temp.poster = poster;
+        results.push(temp);
+      }
+
+    }
+    this.setState({slotsOnMarket: results});
+  }
+
+  createMarketContent = () => {
+    const { slotsOnMarket } = this.state;
+    return (
+      <div className="site-layout-content">
+        {/* <p>Balance: {this.state.balance}</p>
+        {this.createOwnerUtilsButton()} */}
+        <Table onRow={this.onRowCallback} 
+          dataSource={slotsOnMarket} 
+          columns={marketCols} 
+          pagination={false} 
+          showHeader={true} 
+          style={{cursor:"pointer"}} 
+          bordered={true}
+          rowSelection={{
+            type: "radio",
+            selectedRowKeys: this.state.selectedKey == null ? [] : [this.state.selectedKey]
+          }}
+        />
+        {/* {this.createSlotManagementButtons()} */}
+      </div>
+    );
+  }
+
+  createMarketButton = () => {
+    const { slotsOnMarket, viewOwner, accounts, contract, selectedKey} = this.state;
+    var arr = [];
+    var selectedItem = null;
+    if (viewOwner != 111) {
+      return;
+    }
+
+    if (slotsOnMarket != null) {
+      for (var i in slotsOnMarket) {
+        var entry = slotsOnMarket[i];
+        if (entry.key == selectedKey) {
+          selectedItem = entry;
+          break;
+        }
+      }
+    }
+
+    // arr.push(<Button onClick={() => {
+    //   this.getMarket();
+    // }}>Update Market</Button>);
+
+    if (selectedItem != null && accounts[0] == selectedItem.poster) {
+      arr.push(<Button onClick={() => {
+        console.log(selectedItem.tradeIdx);
+        contract.methods.cancelTrade(selectedItem.tradeIdx).send({from: accounts[0]});
+      }}>Cancel Slot</Button>);
+    }
+    if (selectedItem != null && accounts[0] != selectedItem.poster) {
+      arr.push(<Button onClick={() => {
+        contract.methods.executeTrade(selectedItem.tradeIdx).send({from: accounts[0], value: levelUpFee});
+      }}>Buy Slot</Button>);
+    }
+    return arr;
+  }
+ 
   getFactory = async () => {
     const { accounts, contract } = this.state;
 
@@ -204,6 +304,8 @@ class App extends Component {
     this.setState({ slots: results, owner: contractOwner, balance: ownerBalance, viewOwner: accounts[0]});
     this.localStateUpdate();
   };
+
+
 
   onRowCallback = (record) => {
     return {
@@ -387,6 +489,7 @@ class App extends Component {
     var menuItems = [];
     var arr = [];
 
+    menuItems.push({name: "Market", key: 111})
     menuItems.push({ name: "My Farm", key: accounts[0] });
 
     for (var i in friendList) {
@@ -437,7 +540,6 @@ class App extends Component {
 
   updateFriendSlot = async () => {
     const { accounts, contract, viewOwner } = this.state;
-
     var tmp = await contract.methods.getFarmByOwner(viewOwner).call({from: accounts[0]});
     var results = []
 
@@ -553,7 +655,7 @@ class App extends Component {
       );
     }
     else {
-      if (viewOwner != null) {
+      if (viewOwner != null && viewOwner != 111) {
         this.updateFriendSlot();
         this.updateFriendSlotState();
       }
@@ -581,6 +683,30 @@ class App extends Component {
   }
 
   render() {
+    if (this.state.viewOwner == 111) {
+      return (
+        <Layout className="layout" style={{ minWidth:"500px" }}>
+          <Header style={{ color:"white", whiteSpace:"nowrap" }}>
+            <BuildOutlined style={{ color:"white", fontSize:"200%", paddingInline: '0 25px'  }} />
+            Account ID: {this.state.accounts[0]}
+          </Header>
+          <Layout>
+            <Sider>
+              <Menu theme="dark" mode="inline" defaultSelectedKeys={[this.state.accounts[0]]} onClick={this.handleFriendMenuClick}>
+                {this.createFriendsMenu()}
+              </Menu>
+            </Sider>
+            <Layout>
+              <Content style={{ padding: '0 50px' }}>
+                {this.createMarketContent()}
+                {this.createMarketButton()}
+              </Content>
+              <Footer style={{ textAlign: 'center' }}>CSC2125 DApp</Footer>
+            </Layout>
+          </Layout>
+        </Layout>
+      );
+    }
     if (this.state.accounts == this.state.viewOwner) {
       var itemList = this.state.slots;
     } else {
