@@ -1,0 +1,1850 @@
+{
+    "contractName": "SlotUpgrade",
+    "abi": [
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "previousOwner",
+                    "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "newOwner",
+                    "type": "address"
+                }
+            ],
+            "name": "OwnershipTransferred",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "addr",
+                    "type": "address"
+                }
+            ],
+            "name": "createSlotEvent",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "cropID",
+                    "type": "uint256"
+                }
+            ],
+            "name": "deleteCropList",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "cropID",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "grow_time",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "price",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "exp",
+                    "type": "uint256"
+                }
+            ],
+            "name": "updateCropList",
+            "type": "event"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "OwnerMoneyCount",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "OwnerSlotCount",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_slotID",
+                    "type": "uint256"
+                }
+            ],
+            "name": "UpgradeSlot",
+            "outputs": [],
+            "stateMutability": "payable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_exp",
+                    "type": "uint256"
+                }
+            ],
+            "name": "addInLevelList",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_num",
+                    "type": "uint256"
+                }
+            ],
+            "name": "buySlot",
+            "outputs": [],
+            "stateMutability": "payable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "createFarm",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "cropsList",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "cropID",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "grow_time",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "price",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "dry_time",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "grass_time",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "stealed",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "exp",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_cropID",
+                    "type": "uint256"
+                }
+            ],
+            "name": "delInCropsList",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_owner",
+                    "type": "address"
+                }
+            ],
+            "name": "getFarmByOwner",
+            "outputs": [
+                {
+                    "internalType": "uint256[]",
+                    "name": "",
+                    "type": "uint256[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "exp",
+                    "type": "uint256"
+                }
+            ],
+            "name": "getLevel",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "initLevelList",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "levelList",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_cropID",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_grow_time",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_price",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_exp",
+                    "type": "uint256"
+                }
+            ],
+            "name": "modInCropsList",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "owner",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "renounceOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_fee",
+                    "type": "uint256"
+                }
+            ],
+            "name": "setLevelUpFee",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "slotToOwner",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "slots",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "cropID",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "grow_time",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "price",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "dry_time",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "grass_time",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "stealed",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "exp",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "newOwner",
+                    "type": "address"
+                }
+            ],
+            "name": "transferOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "withdraw",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }
+    ],
+    "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"createSlotEvent\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"cropID\",\"type\":\"uint256\"}],\"name\":\"deleteCropList\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"cropID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"grow_time\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"exp\",\"type\":\"uint256\"}],\"name\":\"updateCropList\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"OwnerMoneyCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"OwnerSlotCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_slotID\",\"type\":\"uint256\"}],\"name\":\"UpgradeSlot\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_exp\",\"type\":\"uint256\"}],\"name\":\"addInLevelList\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_num\",\"type\":\"uint256\"}],\"name\":\"buySlot\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"createFarm\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"cropsList\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"cropID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"grow_time\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"dry_time\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"grass_time\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"stealed\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"exp\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_cropID\",\"type\":\"uint256\"}],\"name\":\"delInCropsList\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"getFarmByOwner\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"exp\",\"type\":\"uint256\"}],\"name\":\"getLevel\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"initLevelList\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"levelList\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_cropID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_grow_time\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_price\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_exp\",\"type\":\"uint256\"}],\"name\":\"modInCropsList\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_fee\",\"type\":\"uint256\"}],\"name\":\"setLevelUpFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"slotToOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"slots\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"cropID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"grow_time\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"dry_time\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"grass_time\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"stealed\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"exp\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/Cirno/Desktop/distributed_ether_farm-main/contracts/SlotUpgrade.sol\":\"SlotUpgrade\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/Cirno/Desktop/distributed_ether_farm-main/contracts/SlotFactory.sol\":{\"keccak256\":\"0x7730de89cafa1ec451072b61b6ac1bd1dac3afa705bc3e1ca210d0f7f3c65073\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://afac6f30f993c22d72f5785efa0626f4d3c53f98138f794ab8499af269bfe01e\",\"dweb:/ipfs/QmRvFjU7Lf7SchbT13FxFhuaSfXce4QJMxL2tYbRGgL7i1\"]},\"/Users/Cirno/Desktop/distributed_ether_farm-main/contracts/SlotUpgrade.sol\":{\"keccak256\":\"0xbfbc952641ffcbcc73ab75f997ebda5fdf5b23e42c3b61f2a08b2cde027dffae\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://37f3d79a3bc734d829e185e519ff01139c746ed6fe8a0e1dcded7abfed2084d1\",\"dweb:/ipfs/QmccPWgtgnq9xus4tT3DHS8Me4H9fchvAA1vKJJg3kE3Pp\"]},\"/Users/Cirno/Desktop/distributed_ether_farm-main/contracts/SlotUtils.sol\":{\"keccak256\":\"0x3a3f9135f3db9d9bdb508707d3897e012a6d041268196fbdd93160532ac994cc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6de3b0f2f1cdc05152ba7750c68c62bc0296e9d91a644fa65c56a33789399eac\",\"dweb:/ipfs/QmYG7Gwygfh3p61AxVEJw9uxCcckWw99SWm7uNLm9KopBz\"]},\"/Users/Cirno/Desktop/distributed_ether_farm-main/node_modules/@openzeppelin/contracts/access/Ownable.sol\":{\"keccak256\":\"0x1cae4f85f114ff17b90414f5da67365b1d00337abb5bce9bf944eb78a2c0673c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d5ff16b336ce8f906478d5f2eecc6435e00833bdc0b92f6b209cf9e92cb5b2b7\",\"dweb:/ipfs/QmRD1rAZEqQ73C33cdA3QoUyBDMEWnNKNMc6PNkAZWHeQQ\"]},\"/Users/Cirno/Desktop/distributed_ether_farm-main/node_modules/@openzeppelin/contracts/utils/Context.sol\":{\"keccak256\":\"0xf930d2df426bfcfc1f7415be724f04081c96f4fb9ec8d0e3a521c07692dface0\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://fc2bfdea0d2562c76fb3c4cf70a86c6ba25c5a30e8f8515c95aafdf8383f8395\",\"dweb:/ipfs/QmTbFya18786ckJfLYUoWau9jBTKfmWnWm5XSViWvB7PXN\"]}},\"version\":1}",
+    "bytecode": "608060405266038d7ea4c6800060075534801561001b57600080fd5b506000610026610079565b600480546001600160a01b0319166001600160a01b038316908117909155604051919250906000907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908290a35061007d565b3390565b6110c68061008c6000396000f3fe60806040526004361061011f5760003560e01c806386481d40116100a0578063ab2874cb11610064578063ab2874cb14610305578063ccf670f814610318578063e1928ac914610338578063eb32091514610358578063f2fde38b146103785761011f565b806386481d40146102705780638871c9c5146102905780638da5cb5b146102b057806398815594146102c5578063a9bf928f146102e55761011f565b80633ccfd60b116100e75780633ccfd60b146101cc578063575c25b0146101e1578063580405ba1461020e5780636099804d1461023b578063715018a61461025b5761011f565b80630c10e499146101245780630d79e8351461015a5780631d5ec3cb1461017157806327adc95e14610186578063387dd9e914610199575b600080fd5b34801561013057600080fd5b5061014461013f366004610eb7565b610398565b6040516101519190610f00565b60405180910390f35b34801561016657600080fd5b5061016f6103b3565b005b34801561017d57600080fd5b5061016f610459565b61016f610194366004610eb7565b61047d565b3480156101a557600080fd5b506101b96101b4366004610eb7565b61054f565b6040516101519796959493929190610ff7565b3480156101d857600080fd5b5061016f6105a1565b3480156101ed57600080fd5b506102016101fc366004610e89565b610623565b6040516101519190610f14565b34801561021a57600080fd5b5061022e610229366004610e89565b610719565b6040516101519190610fd3565b34801561024757600080fd5b5061016f610256366004610eb7565b61072b565b34801561026757600080fd5b5061016f610821565b34801561027c57600080fd5b5061022e61028b366004610eb7565b6108aa565b34801561029c57600080fd5b5061022e6102ab366004610e89565b61090e565b3480156102bc57600080fd5b50610144610920565b3480156102d157600080fd5b5061022e6102e0366004610eb7565b61092f565b3480156102f157600080fd5b506101b9610300366004610eb7565b610950565b61016f610313366004610eb7565b610991565b34801561032457600080fd5b5061016f610333366004610eb7565b6109b3565b34801561034457600080fd5b5061016f610353366004610ecf565b6109f7565b34801561036457600080fd5b5061016f610373366004610eb7565b610af9565b34801561038457600080fd5b5061016f610393366004610e89565b610bbc565b6001602052600090815260409020546001600160a01b031681565b6103bb610c7d565b6001600160a01b03166103cc610920565b6001600160a01b0316146103fb5760405162461bcd60e51b81526004016103f290610f9e565b60405180910390fd5b6006541561040857600080fd5b600680546001818101835560008381527ff652222313e28459528d920b65115c16c04f3efc82aaedc97be59f3f377c0d3f92830155825480820184556005908301558254908101909255600a910155565b336000908152600360205260409020541561047357600080fd5b61047b610c81565b565b600754341461048b57600080fd5b60008082815481106104ad57634e487b7160e01b600052603260045260246000fd5b9060005260206000209060070201905060016006805490506104cf9190611048565b6104dc82600601546108aa565b106104e657600080fd5b60066104f582600601546108aa565b8154811061051357634e487b7160e01b600052603260045260246000fd5b6000918252602082200154600683015560405133917ffa75433b62fa9aa3569a596aca6569a4687697e876289d01131561272e0e904891a25050565b6000818154811061055f57600080fd5b600091825260209091206007909102018054600182015460028301546003840154600485015460058601546006909601549496509294919390929160ff169087565b6105a9610c7d565b6001600160a01b03166105ba610920565b6001600160a01b0316146105e05760405162461bcd60e51b81526004016103f290610f9e565b6105e8610920565b6001600160a01b03166108fc479081150290604051600060405180830381858888f19350505050158015610620573d6000803e3d6000fd5b50565b6001600160a01b0381166000908152600360205260408120546060919067ffffffffffffffff81111561066657634e487b7160e01b600052604160045260246000fd5b60405190808252806020026020018201604052801561068f578160200160208202803683370190505b5090506000805b60005481101561070e576000818152600160205260409020546001600160a01b03868116911614156106fc57808383815181106106e357634e487b7160e01b600052603260045260246000fd5b6020908102919091010152816106f88161105f565b9250505b806107068161105f565b915050610696565b50909150505b919050565b60026020526000908152604090205481565b610733610c7d565b6001600160a01b0316610744610920565b6001600160a01b03161461076a5760405162461bcd60e51b81526004016103f290610f9e565b6040805160e08101825260008082526020808301828152838501838152606085018481526080860185815260a0870186815260c088018781528a88526005968790529689902097518855935160018801559151600287015551600386015551600485015551908301805460ff191691151591909117905551600690910155517fda5207af4ca2a8f617e7b6b247ccb5495c765df30e98c115443a569b8ac3d26490610816908390610fd3565b60405180910390a150565b610829610c7d565b6001600160a01b031661083a610920565b6001600160a01b0316146108605760405162461bcd60e51b81526004016103f290610f9e565b6004546040516000916001600160a01b0316907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a3600480546001600160a01b0319169055565b6000805b60065481101561090457600681815481106108d957634e487b7160e01b600052603260045260246000fd5b90600052602060002001548310156108f2579050610714565b806108fc8161105f565b9150506108ae565b5050600654919050565b60036020526000908152604090205481565b6004546001600160a01b031690565b6006818154811061093f57600080fd5b600091825260209091200154905081565b6005602081905260009182526040909120805460018201546002830154600384015460048501549585015460069095015493959294919390929160ff169087565b8060075461099f9190611029565b34146109aa57600080fd5b61062081610ca0565b6109bb610c7d565b6001600160a01b03166109cc610920565b6001600160a01b0316146109f25760405162461bcd60e51b81526004016103f290610f9e565b600755565b6109ff610c7d565b6001600160a01b0316610a10610920565b6001600160a01b031614610a365760405162461bcd60e51b81526004016103f290610f9e565b6040805160e08101825285815260208082018681528284018681526000606085018181526080860182815260a0870183815260c088018a81528d855260059788905293899020975188559451600188015592516002870155516003860155905160048501559051918301805460ff19169215159290921790915551600690910155517f0a99a7515cce8c21202b55bdd8c634a45cf0fc5ffc970a5faf445f6e2666505790610aeb908690869086908690610fdc565b60405180910390a150505050565b610b01610c7d565b6001600160a01b0316610b12610920565b6001600160a01b031614610b385760405162461bcd60e51b81526004016103f290610f9e565b6006541580610b7e575060068054610b5290600190611048565b81548110610b7057634e487b7160e01b600052603260045260246000fd5b906000526020600020015481115b610b8757600080fd5b600680546001810182556000919091527ff652222313e28459528d920b65115c16c04f3efc82aaedc97be59f3f377c0d3f0155565b610bc4610c7d565b6001600160a01b0316610bd5610920565b6001600160a01b031614610bfb5760405162461bcd60e51b81526004016103f290610f9e565b6001600160a01b038116610c215760405162461bcd60e51b81526004016103f290610f58565b6004546040516001600160a01b038084169216907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a3600480546001600160a01b0319166001600160a01b0392909216919091179055565b3390565b610c8b6006610ca0565b33600090815260026020526040902060649055565b60005b81811015610e5a57600080546040805160e0810182528381526020808201858152828401868152606084018781526080850188815260a08601898152600160c08801818152818b018c558b8052975160078b027f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e56381019190915595517f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e56487015593517f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e56586015591517f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e566850155517f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e567840155517f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e5688301805491151560ff1990921691909117905592517f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e5699091015583855290815281842080546001600160a01b03191633908117909155845260039052822080549192610e418361105f565b9190505550508080610e529061105f565b915050610ca3565b5060405133907ffa75433b62fa9aa3569a596aca6569a4687697e876289d01131561272e0e904890600090a250565b600060208284031215610e9a578081fd5b81356001600160a01b0381168114610eb0578182fd5b9392505050565b600060208284031215610ec8578081fd5b5035919050565b60008060008060808587031215610ee4578283fd5b5050823594602084013594506040840135936060013592509050565b6001600160a01b0391909116815260200190565b6020808252825182820181905260009190848201906040850190845b81811015610f4c57835183529284019291840191600101610f30565b50909695505050505050565b60208082526026908201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160408201526564647265737360d01b606082015260800190565b6020808252818101527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604082015260600190565b90815260200190565b93845260208401929092526040830152606082015260800190565b9687526020870195909552604086019390935260608501919091526080840152151560a083015260c082015260e00190565b60008160001904831182151516156110435761104361107a565b500290565b60008282101561105a5761105a61107a565b500390565b60006000198214156110735761107361107a565b5060010190565b634e487b7160e01b600052601160045260246000fdfea2646970667358221220cc1a6bb7ab0947bdf26e56c837f3496935b4862848cb5321b38ea4c83bb017cd64736f6c63430008000033",
+    "deployedBytecode": "60806040526004361061011f5760003560e01c806386481d40116100a0578063ab2874cb11610064578063ab2874cb14610305578063ccf670f814610318578063e1928ac914610338578063eb32091514610358578063f2fde38b146103785761011f565b806386481d40146102705780638871c9c5146102905780638da5cb5b146102b057806398815594146102c5578063a9bf928f146102e55761011f565b80633ccfd60b116100e75780633ccfd60b146101cc578063575c25b0146101e1578063580405ba1461020e5780636099804d1461023b578063715018a61461025b5761011f565b80630c10e499146101245780630d79e8351461015a5780631d5ec3cb1461017157806327adc95e14610186578063387dd9e914610199575b600080fd5b34801561013057600080fd5b5061014461013f366004610eb7565b610398565b6040516101519190610f00565b60405180910390f35b34801561016657600080fd5b5061016f6103b3565b005b34801561017d57600080fd5b5061016f610459565b61016f610194366004610eb7565b61047d565b3480156101a557600080fd5b506101b96101b4366004610eb7565b61054f565b6040516101519796959493929190610ff7565b3480156101d857600080fd5b5061016f6105a1565b3480156101ed57600080fd5b506102016101fc366004610e89565b610623565b6040516101519190610f14565b34801561021a57600080fd5b5061022e610229366004610e89565b610719565b6040516101519190610fd3565b34801561024757600080fd5b5061016f610256366004610eb7565b61072b565b34801561026757600080fd5b5061016f610821565b34801561027c57600080fd5b5061022e61028b366004610eb7565b6108aa565b34801561029c57600080fd5b5061022e6102ab366004610e89565b61090e565b3480156102bc57600080fd5b50610144610920565b3480156102d157600080fd5b5061022e6102e0366004610eb7565b61092f565b3480156102f157600080fd5b506101b9610300366004610eb7565b610950565b61016f610313366004610eb7565b610991565b34801561032457600080fd5b5061016f610333366004610eb7565b6109b3565b34801561034457600080fd5b5061016f610353366004610ecf565b6109f7565b34801561036457600080fd5b5061016f610373366004610eb7565b610af9565b34801561038457600080fd5b5061016f610393366004610e89565b610bbc565b6001602052600090815260409020546001600160a01b031681565b6103bb610c7d565b6001600160a01b03166103cc610920565b6001600160a01b0316146103fb5760405162461bcd60e51b81526004016103f290610f9e565b60405180910390fd5b6006541561040857600080fd5b600680546001818101835560008381527ff652222313e28459528d920b65115c16c04f3efc82aaedc97be59f3f377c0d3f92830155825480820184556005908301558254908101909255600a910155565b336000908152600360205260409020541561047357600080fd5b61047b610c81565b565b600754341461048b57600080fd5b60008082815481106104ad57634e487b7160e01b600052603260045260246000fd5b9060005260206000209060070201905060016006805490506104cf9190611048565b6104dc82600601546108aa565b106104e657600080fd5b60066104f582600601546108aa565b8154811061051357634e487b7160e01b600052603260045260246000fd5b6000918252602082200154600683015560405133917ffa75433b62fa9aa3569a596aca6569a4687697e876289d01131561272e0e904891a25050565b6000818154811061055f57600080fd5b600091825260209091206007909102018054600182015460028301546003840154600485015460058601546006909601549496509294919390929160ff169087565b6105a9610c7d565b6001600160a01b03166105ba610920565b6001600160a01b0316146105e05760405162461bcd60e51b81526004016103f290610f9e565b6105e8610920565b6001600160a01b03166108fc479081150290604051600060405180830381858888f19350505050158015610620573d6000803e3d6000fd5b50565b6001600160a01b0381166000908152600360205260408120546060919067ffffffffffffffff81111561066657634e487b7160e01b600052604160045260246000fd5b60405190808252806020026020018201604052801561068f578160200160208202803683370190505b5090506000805b60005481101561070e576000818152600160205260409020546001600160a01b03868116911614156106fc57808383815181106106e357634e487b7160e01b600052603260045260246000fd5b6020908102919091010152816106f88161105f565b9250505b806107068161105f565b915050610696565b50909150505b919050565b60026020526000908152604090205481565b610733610c7d565b6001600160a01b0316610744610920565b6001600160a01b03161461076a5760405162461bcd60e51b81526004016103f290610f9e565b6040805160e08101825260008082526020808301828152838501838152606085018481526080860185815260a0870186815260c088018781528a88526005968790529689902097518855935160018801559151600287015551600386015551600485015551908301805460ff191691151591909117905551600690910155517fda5207af4ca2a8f617e7b6b247ccb5495c765df30e98c115443a569b8ac3d26490610816908390610fd3565b60405180910390a150565b610829610c7d565b6001600160a01b031661083a610920565b6001600160a01b0316146108605760405162461bcd60e51b81526004016103f290610f9e565b6004546040516000916001600160a01b0316907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a3600480546001600160a01b0319169055565b6000805b60065481101561090457600681815481106108d957634e487b7160e01b600052603260045260246000fd5b90600052602060002001548310156108f2579050610714565b806108fc8161105f565b9150506108ae565b5050600654919050565b60036020526000908152604090205481565b6004546001600160a01b031690565b6006818154811061093f57600080fd5b600091825260209091200154905081565b6005602081905260009182526040909120805460018201546002830154600384015460048501549585015460069095015493959294919390929160ff169087565b8060075461099f9190611029565b34146109aa57600080fd5b61062081610ca0565b6109bb610c7d565b6001600160a01b03166109cc610920565b6001600160a01b0316146109f25760405162461bcd60e51b81526004016103f290610f9e565b600755565b6109ff610c7d565b6001600160a01b0316610a10610920565b6001600160a01b031614610a365760405162461bcd60e51b81526004016103f290610f9e565b6040805160e08101825285815260208082018681528284018681526000606085018181526080860182815260a0870183815260c088018a81528d855260059788905293899020975188559451600188015592516002870155516003860155905160048501559051918301805460ff19169215159290921790915551600690910155517f0a99a7515cce8c21202b55bdd8c634a45cf0fc5ffc970a5faf445f6e2666505790610aeb908690869086908690610fdc565b60405180910390a150505050565b610b01610c7d565b6001600160a01b0316610b12610920565b6001600160a01b031614610b385760405162461bcd60e51b81526004016103f290610f9e565b6006541580610b7e575060068054610b5290600190611048565b81548110610b7057634e487b7160e01b600052603260045260246000fd5b906000526020600020015481115b610b8757600080fd5b600680546001810182556000919091527ff652222313e28459528d920b65115c16c04f3efc82aaedc97be59f3f377c0d3f0155565b610bc4610c7d565b6001600160a01b0316610bd5610920565b6001600160a01b031614610bfb5760405162461bcd60e51b81526004016103f290610f9e565b6001600160a01b038116610c215760405162461bcd60e51b81526004016103f290610f58565b6004546040516001600160a01b038084169216907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a3600480546001600160a01b0319166001600160a01b0392909216919091179055565b3390565b610c8b6006610ca0565b33600090815260026020526040902060649055565b60005b81811015610e5a57600080546040805160e0810182528381526020808201858152828401868152606084018781526080850188815260a08601898152600160c08801818152818b018c558b8052975160078b027f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e56381019190915595517f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e56487015593517f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e56586015591517f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e566850155517f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e567840155517f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e5688301805491151560ff1990921691909117905592517f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e5699091015583855290815281842080546001600160a01b03191633908117909155845260039052822080549192610e418361105f565b9190505550508080610e529061105f565b915050610ca3565b5060405133907ffa75433b62fa9aa3569a596aca6569a4687697e876289d01131561272e0e904890600090a250565b600060208284031215610e9a578081fd5b81356001600160a01b0381168114610eb0578182fd5b9392505050565b600060208284031215610ec8578081fd5b5035919050565b60008060008060808587031215610ee4578283fd5b5050823594602084013594506040840135936060013592509050565b6001600160a01b0391909116815260200190565b6020808252825182820181905260009190848201906040850190845b81811015610f4c57835183529284019291840191600101610f30565b50909695505050505050565b60208082526026908201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160408201526564647265737360d01b606082015260800190565b6020808252818101527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604082015260600190565b90815260200190565b93845260208401929092526040830152606082015260800190565b9687526020870195909552604086019390935260608501919091526080840152151560a083015260c082015260e00190565b60008160001904831182151516156110435761104361107a565b500290565b60008282101561105a5761105a61107a565b500390565b60006000198214156110735761107361107a565b5060010190565b634e487b7160e01b600052601160045260246000fdfea2646970667358221220cc1a6bb7ab0947bdf26e56c837f3496935b4862848cb5321b38ea4c83bb017cd64736f6c63430008000033",
+    "sourceMap": "82:713:6:-:0;;;139:11;121:29;;82:713;;;;;;;;;-1:-1:-1;867:17:10;887:12;:10;:12::i;:::-;909:6;:18;;-1:-1:-1;;;;;;909:18:10;-1:-1:-1;;;;;909:18:10;;;;;;;;942:43;;909:18;;-1:-1:-1;909:18:10;-1:-1:-1;;942:43:10;;-1:-1:-1;;942:43:10;842:150;82:713:6;;586:96:66;665:10;586:96;:::o;82:713:6:-;;;;;;;",
+    "deployedSourceMap": "82:713:6:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;456:44:2;;;;;;;;;;-1:-1:-1;456:44:2;;;;;:::i;:::-;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;1031:266:7;;;;;;;;;;;;;:::i;:::-;;1166:108:2;;;;;;;;;;;;;:::i;289:303:6:-;;;;;;:::i;:::-;;:::i;430:19:2:-;;;;;;;;;;-1:-1:-1;430:19:2;;;;;:::i;:::-;;:::i;:::-;;;;;;;;;;;;;:::i;597:104:6:-;;;;;;;;;;;;;:::i;1279:382:2:-;;;;;;;;;;-1:-1:-1;1279:382:2;;;;;:::i;:::-;;:::i;:::-;;;;;;;:::i;506:48::-;;;;;;;;;;-1:-1:-1;506:48:2;;;;;:::i;:::-;;:::i;:::-;;;;;;;:::i;625:162:7:-;;;;;;;;;;-1:-1:-1;625:162:7;;;;;:::i;:::-;;:::i;1700:145:10:-;;;;;;;;;;;;;:::i;1302:229:7:-;;;;;;;;;;-1:-1:-1;1302:229:7;;;;;:::i;:::-;;:::i;560:47:2:-;;;;;;;;;;-1:-1:-1;560:47:2;;;;;:::i;:::-;;:::i;1068:85:10:-;;;;;;;;;;;;;:::i;335:23:7:-;;;;;;;;;;-1:-1:-1;335:23:7;;;;;:::i;:::-;;:::i;290:39::-;;;;;;;;;;-1:-1:-1;290:39:7;;;;;:::i;:::-;;:::i;156:128:6:-;;;;;;:::i;:::-;;:::i;706:87::-;;;;;;;;;;-1:-1:-1;706:87:6;;;;;:::i;:::-;;:::i;369:251:7:-;;;;;;;;;;-1:-1:-1;369:251:7;;;;;:::i;:::-;;:::i;797:229::-;;;;;;;;;;-1:-1:-1;797:229:7;;;;;:::i;:::-;;:::i;1994:240:10:-;;;;;;;;;;-1:-1:-1;1994:240:10;;;;;:::i;:::-;;:::i;456:44:2:-;;;;;;;;;;;;-1:-1:-1;;;;;456:44:2;;:::o;1031:266:7:-;1291:12:10;:10;:12::i;:::-;-1:-1:-1;;;;;1280:23:10;:7;:5;:7::i;:::-;-1:-1:-1;;;;;1280:23:10;;1272:68;;;;-1:-1:-1;;;1272:68:10;;;;;;;:::i;:::-;;;;;;;;;1092:9:7::1;:16:::0;:21;1084:30:::1;;;::::0;::::1;;1124:9;:17:::0;;::::1;::::0;;::::1;::::0;;1139:1:::1;1124:17:::0;;;;;;::::1;::::0;1161;;;;::::1;::::0;;1176:1:::1;1161:17:::0;;::::1;::::0;1200:18;;;;::::1;::::0;;;1215:2:::1;1200:18:::0;::::1;::::0;1031:266::o;1166:108:2:-;1227:10;1212:26;;;;:14;:26;;;;;;:31;1204:40;;;;;;1254:13;:11;:13::i;:::-;1166:108::o;289:303:6:-;372:10;;359:9;:23;351:32;;;;;;393:19;415:5;421:7;415:14;;;;;;-1:-1:-1;;;415:14:6;;;;;;;;;;;;;;;;;;;393:36;;487:1;470:9;:16;;;;:18;;;;:::i;:::-;447:20;456:6;:10;;;447:8;:20::i;:::-;:41;439:50;;;;;;512:9;522:20;531:6;:10;;;522:8;:20::i;:::-;512:31;;;;;;-1:-1:-1;;;512:31:6;;;;;;;;;;;;;;;;;;499:10;;;:44;558:27;;574:10;;558:27;;;289:303;;:::o;430:19:2:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;430:19:2;;;;;;;;;;;:::o;597:104:6:-;1291:12:10;:10;:12::i;:::-;-1:-1:-1;;;;;1280:23:10;:7;:5;:7::i;:::-;-1:-1:-1;;;;;1280:23:10;;1272:68;;;;-1:-1:-1;;;1272:68:10;;;;;;;:::i;:::-;654:7:6::1;:5;:7::i;:::-;-1:-1:-1::0;;;;;646:25:6::1;:48;672:21;646:48;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;::::0;::::1;;;;;;597:104::o:0;1279:382:2:-;-1:-1:-1;;;;;1400:22:2;;1366:20;1400:22;;;:14;:22;;;;;;1341:13;;1366:20;1389:34;;;;;;-1:-1:-1;;;1389:34:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;1389:34:2;;1366:57;;1433:12;1464:6;1459:173;1480:5;:12;1476:16;;1459:173;;;1517:14;;;;:11;:14;;;;;;-1:-1:-1;;;;;1517:24:2;;;:14;;:24;1513:109;;;1579:1;1561:6;1568:7;1561:15;;;;;;-1:-1:-1;;;1561:15:2;;;;;;;;;;;;;;;;;;:19;1598:9;;;;:::i;:::-;;;;1513:109;1494:3;;;;:::i;:::-;;;;1459:173;;;-1:-1:-1;1648:6:2;;-1:-1:-1;;1279:382:2;;;;:::o;506:48::-;;;;;;;;;;;;;:::o;625:162:7:-;1291:12:10;:10;:12::i;:::-;-1:-1:-1;;;;;1280:23:10;:7;:5;:7::i;:::-;-1:-1:-1;;;;;1280:23:10;;1272:68;;;;-1:-1:-1;;;1272:68:10;;;;;;;:::i;:::-;713:29:7::1;::::0;;::::1;::::0;::::1;::::0;;-1:-1:-1;713:29:7;;;::::1;::::0;;::::1;::::0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;692:18;;;:9:::1;:18:::0;;;;;;;;:50;;;;;;713:29;692:50;::::1;::::0;;;::::1;::::0;::::1;::::0;;::::1;::::0;::::1;::::0;;::::1;::::0;::::1;::::0;;;;::::1;::::0;;-1:-1:-1;;692:50:7::1;::::0;::::1;;::::0;;;::::1;::::0;;;::::1;::::0;;::::1;::::0;757:23;::::1;::::0;::::1;::::0;692:18;;757:23:::1;:::i;:::-;;;;;;;;625:162:::0;:::o;1700:145:10:-;1291:12;:10;:12::i;:::-;-1:-1:-1;;;;;1280:23:10;:7;:5;:7::i;:::-;-1:-1:-1;;;;;1280:23:10;;1272:68;;;;-1:-1:-1;;;1272:68:10;;;;;;;:::i;:::-;1790:6:::1;::::0;1769:40:::1;::::0;1806:1:::1;::::0;-1:-1:-1;;;;;1790:6:10::1;::::0;1769:40:::1;::::0;1806:1;;1769:40:::1;1819:6;:19:::0;;-1:-1:-1;;;;;;1819:19:10::1;::::0;;1700:145::o;1302:229:7:-;1351:4;;1367:125;1384:9;:16;1382:18;;1367:125;;;1428:9;1438:1;1428:12;;;;;;-1:-1:-1;;;1428:12:7;;;;;;;;;;;;;;;;;1424:3;:16;1421:61;;;1466:1;-1:-1:-1;1459:8:7;;1421:61;1402:3;;;;:::i;:::-;;;;1367:125;;;-1:-1:-1;;1508:9:7;:16;1302:229;;;:::o;560:47:2:-;;;;;;;;;;;;;:::o;1068:85:10:-;1140:6;;-1:-1:-1;;;;;1140:6:10;1068:85;:::o;335:23:7:-;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;335:23:7;:::o;290:39::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;156:128:6:-;244:4;232:10;;:16;;;;:::i;:::-;219:9;:29;211:38;;;;;;259:18;272:4;259:12;:18::i;706:87::-;1291:12:10;:10;:12::i;:::-;-1:-1:-1;;;;;1280:23:10;:7;:5;:7::i;:::-;-1:-1:-1;;;;;1280:23:10;;1272:68;;;;-1:-1:-1;;;1272:68:10;;;;;;;:::i;:::-;769:10:6::1;:17:::0;706:87::o;369:251:7:-;1291:12:10;:10;:12::i;:::-;-1:-1:-1;;;;;1280:23:10;:7;:5;:7::i;:::-;-1:-1:-1;;;;;1280:23:10;;1272:68;;;;-1:-1:-1;;;1272:68:10;;;;;;;:::i;:::-;497:52:7::1;::::0;;::::1;::::0;::::1;::::0;;;;;::::1;::::0;;::::1;::::0;;;;;;;;;-1:-1:-1;497:52:7;;;;;;;;;;;;;;;;;;;;;;;;476:18;;;:9:::1;:18:::0;;;;;;;;:73;;;;;;497:52;476:73;::::1;::::0;;;::::1;::::0;::::1;::::0;;::::1;::::0;::::1;::::0;;;::::1;::::0;::::1;::::0;;;;;::::1;::::0;;-1:-1:-1;;476:73:7::1;::::0;::::1;;::::0;;;::::1;::::0;;;;::::1;::::0;;::::1;::::0;564:49;::::1;::::0;::::1;::::0;497:52;;;;;;;;564:49:::1;:::i;:::-;;;;;;;;369:251:::0;;;;:::o;797:229::-;1291:12:10;:10;:12::i;:::-;-1:-1:-1;;;;;1280:23:10;:7;:5;:7::i;:::-;-1:-1:-1;;;;;1280:23:10;;1272:68;;;;-1:-1:-1;;;1272:68:10;;;;;;;:::i;:::-;868:9:7::1;:16:::0;:21;;:61:::1;;-1:-1:-1::0;900:9:7::1;910:16:::0;;:18:::1;::::0;927:1:::1;::::0;910:18:::1;:::i;:::-;900:29;;;;;;-1:-1:-1::0;;;900:29:7::1;;;;;;;;;;;;;;;;;893:4;:36;868:61;860:70;;;::::0;::::1;;940:9;:20:::0;;::::1;::::0;::::1;::::0;;-1:-1:-1;940:20:7;;;;;::::1;::::0;797:229::o;1994:240:10:-;1291:12;:10;:12::i;:::-;-1:-1:-1;;;;;1280:23:10;:7;:5;:7::i;:::-;-1:-1:-1;;;;;1280:23:10;;1272:68;;;;-1:-1:-1;;;1272:68:10;;;;;;;:::i;:::-;-1:-1:-1;;;;;2082:22:10;::::1;2074:73;;;;-1:-1:-1::0;;;2074:73:10::1;;;;;;;:::i;:::-;2183:6;::::0;2162:38:::1;::::0;-1:-1:-1;;;;;2162:38:10;;::::1;::::0;2183:6:::1;::::0;2162:38:::1;::::0;2183:6:::1;::::0;2162:38:::1;2210:6;:17:::0;;-1:-1:-1;;;;;;2210:17:10::1;-1:-1:-1::0;;;;;2210:17:10;;;::::1;::::0;;;::::1;::::0;;1994:240::o;586:96:66:-;665:10;586:96;:::o;667:158:2:-;709:15;722:1;709:12;:15::i;:::-;750:10;734:27;;;;:15;:27;;;;;764:3;734:33;;667:158::o;830:331::-;886:13;881:232;913:3;905:5;:11;881:232;;;941:7;951:12;;988:29;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;977:41;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;977:41:2;;;;;;;;;;;;;;;;1032:15;;;;;;;;;:28;;-1:-1:-1;;;;;;1032:28:2;1050:10;1032:28;;;;;;1074:26;;977:41;1074:26;;;;:28;;951:12;;1074:28;;;:::i;:::-;;;;;;881:232;918:7;;;;;:::i;:::-;;;;881:232;;;-1:-1:-1;1127:27:2;;1143:10;;1127:27;;;;;830:331;:::o;14:306:89:-;;126:2;114:9;105:7;101:23;97:32;94:2;;;147:6;139;132:22;94:2;178:23;;-1:-1:-1;;;;;230:31:89;;220:42;;210:2;;281:6;273;266:22;210:2;309:5;84:236;-1:-1:-1;;;84:236:89:o;325:190::-;;437:2;425:9;416:7;412:23;408:32;405:2;;;458:6;450;443:22;405:2;-1:-1:-1;486:23:89;;395:120;-1:-1:-1;395:120:89:o;520:395::-;;;;;683:3;671:9;662:7;658:23;654:33;651:2;;;705:6;697;690:22;651:2;-1:-1:-1;;733:23:89;;;803:2;788:18;;775:32;;-1:-1:-1;854:2:89;839:18;;826:32;;905:2;890:18;877:32;;-1:-1:-1;641:274:89;-1:-1:-1;641:274:89:o;920:203::-;-1:-1:-1;;;;;1084:32:89;;;;1066:51;;1054:2;1039:18;;1021:102::o;1128:635::-;1299:2;1351:21;;;1421:13;;1324:18;;;1443:22;;;1128:635;;1299:2;1522:15;;;;1496:2;1481:18;;;1128:635;1568:169;1582:6;1579:1;1576:13;1568:169;;;1643:13;;1631:26;;1712:15;;;;1677:12;;;;1604:1;1597:9;1568:169;;;-1:-1:-1;1754:3:89;;1279:484;-1:-1:-1;;;;;;1279:484:89:o;1768:402::-;1970:2;1952:21;;;2009:2;1989:18;;;1982:30;2048:34;2043:2;2028:18;;2021:62;-1:-1:-1;;;2114:2:89;2099:18;;2092:36;2160:3;2145:19;;1942:228::o;2175:356::-;2377:2;2359:21;;;2396:18;;;2389:30;2455:34;2450:2;2435:18;;2428:62;2522:2;2507:18;;2349:182::o;2536:177::-;2682:25;;;2670:2;2655:18;;2637:76::o;2718:391::-;2949:25;;;3005:2;2990:18;;2983:34;;;;3048:2;3033:18;;3026:34;3091:2;3076:18;;3069:34;2936:3;2921:19;;2903:206::o;3114:617::-;3423:25;;;3479:2;3464:18;;3457:34;;;;3522:2;3507:18;;3500:34;;;;3565:2;3550:18;;3543:34;;;;3608:3;3593:19;;3586:35;3665:14;3658:22;3652:3;3637:19;;3630:51;3712:3;3697:19;;3690:35;3410:3;3395:19;;3377:354::o;3736:168::-;;3842:1;3838;3834:6;3830:14;3827:1;3824:21;3819:1;3812:9;3805:17;3801:45;3798:2;;;3849:18;;:::i;:::-;-1:-1:-1;3889:9:89;;3788:116::o;3909:125::-;;3977:1;3974;3971:8;3968:2;;;3982:18;;:::i;:::-;-1:-1:-1;4019:9:89;;3958:76::o;4039:135::-;;-1:-1:-1;;4099:17:89;;4096:2;;;4119:18;;:::i;:::-;-1:-1:-1;4166:1:89;4155:13;;4086:88::o;4179:127::-;4240:10;4235:3;4231:20;4228:1;4221:31;4271:4;4268:1;4261:15;4295:4;4292:1;4285:15",
+    "sourcePath": "/Users/Cirno/Desktop/distributed_ether_farm-main/contracts/SlotUpgrade.sol",
+    "compiler": {
+        "name": "solc",
+        "version": "0.8.0+commit.c7dfd78e"
+    },
+    "ast": {
+        "absolutePath": "/Users/Cirno/Desktop/distributed_ether_farm-main/contracts/SlotUpgrade.sol",
+        "exportedSymbols": {
+            "Context": [
+                11644
+            ],
+            "Ownable": [
+                2437
+            ],
+            "SlotFactory": [
+                492
+            ],
+            "SlotUpgrade": [
+                1591
+            ],
+            "SlotUtils": [
+                1814
+            ]
+        },
+        "id": 1592,
+        "license": "MIT",
+        "nodeType": "SourceUnit",
+        "nodes": [
+            {
+                "id": 1486,
+                "literals": [
+                    "solidity",
+                    "^",
+                    "0.8",
+                    ".0"
+                ],
+                "nodeType": "PragmaDirective",
+                "src": "32:23:6"
+            },
+            {
+                "absolutePath": "/Users/Cirno/Desktop/distributed_ether_farm-main/contracts/SlotUtils.sol",
+                "file": "./SlotUtils.sol",
+                "id": 1487,
+                "nodeType": "ImportDirective",
+                "scope": 1592,
+                "sourceUnit": 1815,
+                "src": "56:25:6",
+                "symbolAliases": [],
+                "unitAlias": ""
+            },
+            {
+                "abstract": false,
+                "baseContracts": [
+                    {
+                        "baseName": {
+                            "id": 1488,
+                            "name": "SlotUtils",
+                            "nodeType": "IdentifierPath",
+                            "referencedDeclaration": 1814,
+                            "src": "106:9:6"
+                        },
+                        "id": 1489,
+                        "nodeType": "InheritanceSpecifier",
+                        "src": "106:9:6"
+                    }
+                ],
+                "contractDependencies": [
+                    492,
+                    1814,
+                    2437,
+                    11644
+                ],
+                "contractKind": "contract",
+                "fullyImplemented": true,
+                "id": 1591,
+                "linearizedBaseContracts": [
+                    1591,
+                    1814,
+                    2437,
+                    11644,
+                    492
+                ],
+                "name": "SlotUpgrade",
+                "nodeType": "ContractDefinition",
+                "nodes": [
+                    {
+                        "constant": false,
+                        "id": 1492,
+                        "mutability": "mutable",
+                        "name": "levelUpFee",
+                        "nodeType": "VariableDeclaration",
+                        "scope": 1591,
+                        "src": "121:29:6",
+                        "stateVariable": true,
+                        "storageLocation": "default",
+                        "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                        },
+                        "typeName": {
+                            "id": 1490,
+                            "name": "uint",
+                            "nodeType": "ElementaryTypeName",
+                            "src": "121:4:6",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                            }
+                        },
+                        "value": {
+                            "hexValue": "302e303031",
+                            "id": 1491,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "number",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "139:11:6",
+                            "subdenomination": "ether",
+                            "typeDescriptions": {
+                                "typeIdentifier": "t_rational_1000000000000000_by_1",
+                                "typeString": "int_const 1000000000000000"
+                            },
+                            "value": "0.001"
+                        },
+                        "visibility": "internal"
+                    },
+                    {
+                        "body": {
+                            "id": 1510,
+                            "nodeType": "Block",
+                            "src": "201:83:6",
+                            "statements": [
+                                {
+                                    "expression": {
+                                        "arguments": [
+                                            {
+                                                "commonType": {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                },
+                                                "id": 1503,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "lValueRequested": false,
+                                                "leftExpression": {
+                                                    "expression": {
+                                                        "id": 1498,
+                                                        "name": "msg",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 4294967281,
+                                                        "src": "219:3:6",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_magic_message",
+                                                            "typeString": "msg"
+                                                        }
+                                                    },
+                                                    "id": 1499,
+                                                    "isConstant": false,
+                                                    "isLValue": false,
+                                                    "isPure": false,
+                                                    "lValueRequested": false,
+                                                    "memberName": "value",
+                                                    "nodeType": "MemberAccess",
+                                                    "src": "219:9:6",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_uint256",
+                                                        "typeString": "uint256"
+                                                    }
+                                                },
+                                                "nodeType": "BinaryOperation",
+                                                "operator": "==",
+                                                "rightExpression": {
+                                                    "commonType": {
+                                                        "typeIdentifier": "t_uint256",
+                                                        "typeString": "uint256"
+                                                    },
+                                                    "id": 1502,
+                                                    "isConstant": false,
+                                                    "isLValue": false,
+                                                    "isPure": false,
+                                                    "lValueRequested": false,
+                                                    "leftExpression": {
+                                                        "id": 1500,
+                                                        "name": "levelUpFee",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 1492,
+                                                        "src": "232:10:6",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_uint256",
+                                                            "typeString": "uint256"
+                                                        }
+                                                    },
+                                                    "nodeType": "BinaryOperation",
+                                                    "operator": "*",
+                                                    "rightExpression": {
+                                                        "id": 1501,
+                                                        "name": "_num",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 1494,
+                                                        "src": "244:4:6",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_uint256",
+                                                            "typeString": "uint256"
+                                                        }
+                                                    },
+                                                    "src": "232:16:6",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_uint256",
+                                                        "typeString": "uint256"
+                                                    }
+                                                },
+                                                "src": "219:29:6",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                }
+                                            }
+                                        ],
+                                        "expression": {
+                                            "argumentTypes": [
+                                                {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                }
+                                            ],
+                                            "id": 1497,
+                                            "name": "require",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [
+                                                4294967278,
+                                                4294967278
+                                            ],
+                                            "referencedDeclaration": 4294967278,
+                                            "src": "211:7:6",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                                                "typeString": "function (bool) pure"
+                                            }
+                                        },
+                                        "id": 1504,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "kind": "functionCall",
+                                        "lValueRequested": false,
+                                        "names": [],
+                                        "nodeType": "FunctionCall",
+                                        "src": "211:38:6",
+                                        "tryCall": false,
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_tuple$__$",
+                                            "typeString": "tuple()"
+                                        }
+                                    },
+                                    "id": 1505,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "211:38:6"
+                                },
+                                {
+                                    "expression": {
+                                        "arguments": [
+                                            {
+                                                "id": 1507,
+                                                "name": "_num",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 1494,
+                                                "src": "272:4:6",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                }
+                                            }
+                                        ],
+                                        "expression": {
+                                            "argumentTypes": [
+                                                {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                }
+                                            ],
+                                            "id": 1506,
+                                            "name": "_createCrops",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [],
+                                            "referencedDeclaration": 418,
+                                            "src": "259:12:6",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_function_internal_nonpayable$_t_uint256_$returns$__$",
+                                                "typeString": "function (uint256)"
+                                            }
+                                        },
+                                        "id": 1508,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "kind": "functionCall",
+                                        "lValueRequested": false,
+                                        "names": [],
+                                        "nodeType": "FunctionCall",
+                                        "src": "259:18:6",
+                                        "tryCall": false,
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_tuple$__$",
+                                            "typeString": "tuple()"
+                                        }
+                                    },
+                                    "id": 1509,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "259:18:6"
+                                }
+                            ]
+                        },
+                        "functionSelector": "ab2874cb",
+                        "id": 1511,
+                        "implemented": true,
+                        "kind": "function",
+                        "modifiers": [],
+                        "name": "buySlot",
+                        "nodeType": "FunctionDefinition",
+                        "parameters": {
+                            "id": 1495,
+                            "nodeType": "ParameterList",
+                            "parameters": [
+                                {
+                                    "constant": false,
+                                    "id": 1494,
+                                    "mutability": "mutable",
+                                    "name": "_num",
+                                    "nodeType": "VariableDeclaration",
+                                    "scope": 1511,
+                                    "src": "173:9:6",
+                                    "stateVariable": false,
+                                    "storageLocation": "default",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_uint256",
+                                        "typeString": "uint256"
+                                    },
+                                    "typeName": {
+                                        "id": 1493,
+                                        "name": "uint",
+                                        "nodeType": "ElementaryTypeName",
+                                        "src": "173:4:6",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_uint256",
+                                            "typeString": "uint256"
+                                        }
+                                    },
+                                    "visibility": "internal"
+                                }
+                            ],
+                            "src": "172:11:6"
+                        },
+                        "returnParameters": {
+                            "id": 1496,
+                            "nodeType": "ParameterList",
+                            "parameters": [],
+                            "src": "201:0:6"
+                        },
+                        "scope": 1591,
+                        "src": "156:128:6",
+                        "stateMutability": "payable",
+                        "virtual": false,
+                        "visibility": "external"
+                    },
+                    {
+                        "body": {
+                            "id": 1558,
+                            "nodeType": "Block",
+                            "src": "341:251:6",
+                            "statements": [
+                                {
+                                    "expression": {
+                                        "arguments": [
+                                            {
+                                                "commonType": {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                },
+                                                "id": 1520,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "lValueRequested": false,
+                                                "leftExpression": {
+                                                    "expression": {
+                                                        "id": 1517,
+                                                        "name": "msg",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 4294967281,
+                                                        "src": "359:3:6",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_magic_message",
+                                                            "typeString": "msg"
+                                                        }
+                                                    },
+                                                    "id": 1518,
+                                                    "isConstant": false,
+                                                    "isLValue": false,
+                                                    "isPure": false,
+                                                    "lValueRequested": false,
+                                                    "memberName": "value",
+                                                    "nodeType": "MemberAccess",
+                                                    "src": "359:9:6",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_uint256",
+                                                        "typeString": "uint256"
+                                                    }
+                                                },
+                                                "nodeType": "BinaryOperation",
+                                                "operator": "==",
+                                                "rightExpression": {
+                                                    "id": 1519,
+                                                    "name": "levelUpFee",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [],
+                                                    "referencedDeclaration": 1492,
+                                                    "src": "372:10:6",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_uint256",
+                                                        "typeString": "uint256"
+                                                    }
+                                                },
+                                                "src": "359:23:6",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                }
+                                            }
+                                        ],
+                                        "expression": {
+                                            "argumentTypes": [
+                                                {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                }
+                                            ],
+                                            "id": 1516,
+                                            "name": "require",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [
+                                                4294967278,
+                                                4294967278
+                                            ],
+                                            "referencedDeclaration": 4294967278,
+                                            "src": "351:7:6",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                                                "typeString": "function (bool) pure"
+                                            }
+                                        },
+                                        "id": 1521,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "kind": "functionCall",
+                                        "lValueRequested": false,
+                                        "names": [],
+                                        "nodeType": "FunctionCall",
+                                        "src": "351:32:6",
+                                        "tryCall": false,
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_tuple$__$",
+                                            "typeString": "tuple()"
+                                        }
+                                    },
+                                    "id": 1522,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "351:32:6"
+                                },
+                                {
+                                    "assignments": [
+                                        1525
+                                    ],
+                                    "declarations": [
+                                        {
+                                            "constant": false,
+                                            "id": 1525,
+                                            "mutability": "mutable",
+                                            "name": "mySlot",
+                                            "nodeType": "VariableDeclaration",
+                                            "scope": 1558,
+                                            "src": "393:19:6",
+                                            "stateVariable": false,
+                                            "storageLocation": "storage",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_struct$_Slot_$332_storage_ptr",
+                                                "typeString": "struct SlotFactory.Slot"
+                                            },
+                                            "typeName": {
+                                                "id": 1524,
+                                                "nodeType": "UserDefinedTypeName",
+                                                "pathNode": {
+                                                    "id": 1523,
+                                                    "name": "Slot",
+                                                    "nodeType": "IdentifierPath",
+                                                    "referencedDeclaration": 332,
+                                                    "src": "393:4:6"
+                                                },
+                                                "referencedDeclaration": 332,
+                                                "src": "393:4:6",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_struct$_Slot_$332_storage_ptr",
+                                                    "typeString": "struct SlotFactory.Slot"
+                                                }
+                                            },
+                                            "visibility": "internal"
+                                        }
+                                    ],
+                                    "id": 1529,
+                                    "initialValue": {
+                                        "baseExpression": {
+                                            "id": 1526,
+                                            "name": "slots",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [],
+                                            "referencedDeclaration": 336,
+                                            "src": "415:5:6",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_array$_t_struct$_Slot_$332_storage_$dyn_storage",
+                                                "typeString": "struct SlotFactory.Slot storage ref[] storage ref"
+                                            }
+                                        },
+                                        "id": 1528,
+                                        "indexExpression": {
+                                            "id": 1527,
+                                            "name": "_slotID",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [],
+                                            "referencedDeclaration": 1513,
+                                            "src": "421:7:6",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_uint256",
+                                                "typeString": "uint256"
+                                            }
+                                        },
+                                        "isConstant": false,
+                                        "isLValue": true,
+                                        "isPure": false,
+                                        "lValueRequested": false,
+                                        "nodeType": "IndexAccess",
+                                        "src": "415:14:6",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_struct$_Slot_$332_storage",
+                                            "typeString": "struct SlotFactory.Slot storage ref"
+                                        }
+                                    },
+                                    "nodeType": "VariableDeclarationStatement",
+                                    "src": "393:36:6"
+                                },
+                                {
+                                    "expression": {
+                                        "arguments": [
+                                            {
+                                                "commonType": {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                },
+                                                "id": 1539,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "lValueRequested": false,
+                                                "leftExpression": {
+                                                    "arguments": [
+                                                        {
+                                                            "expression": {
+                                                                "id": 1532,
+                                                                "name": "mySlot",
+                                                                "nodeType": "Identifier",
+                                                                "overloadedDeclarations": [],
+                                                                "referencedDeclaration": 1525,
+                                                                "src": "456:6:6",
+                                                                "typeDescriptions": {
+                                                                    "typeIdentifier": "t_struct$_Slot_$332_storage_ptr",
+                                                                    "typeString": "struct SlotFactory.Slot storage pointer"
+                                                                }
+                                                            },
+                                                            "id": 1533,
+                                                            "isConstant": false,
+                                                            "isLValue": true,
+                                                            "isPure": false,
+                                                            "lValueRequested": false,
+                                                            "memberName": "exp",
+                                                            "nodeType": "MemberAccess",
+                                                            "referencedDeclaration": 331,
+                                                            "src": "456:10:6",
+                                                            "typeDescriptions": {
+                                                                "typeIdentifier": "t_uint256",
+                                                                "typeString": "uint256"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "expression": {
+                                                        "argumentTypes": [
+                                                            {
+                                                                "typeIdentifier": "t_uint256",
+                                                                "typeString": "uint256"
+                                                            }
+                                                        ],
+                                                        "id": 1531,
+                                                        "name": "getLevel",
+                                                        "nodeType": "Identifier",
+                                                        "overloadedDeclarations": [],
+                                                        "referencedDeclaration": 1775,
+                                                        "src": "447:8:6",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_uint256_$",
+                                                            "typeString": "function (uint256) view returns (uint256)"
+                                                        }
+                                                    },
+                                                    "id": 1534,
+                                                    "isConstant": false,
+                                                    "isLValue": false,
+                                                    "isPure": false,
+                                                    "kind": "functionCall",
+                                                    "lValueRequested": false,
+                                                    "names": [],
+                                                    "nodeType": "FunctionCall",
+                                                    "src": "447:20:6",
+                                                    "tryCall": false,
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_uint256",
+                                                        "typeString": "uint256"
+                                                    }
+                                                },
+                                                "nodeType": "BinaryOperation",
+                                                "operator": "<",
+                                                "rightExpression": {
+                                                    "commonType": {
+                                                        "typeIdentifier": "t_uint256",
+                                                        "typeString": "uint256"
+                                                    },
+                                                    "id": 1538,
+                                                    "isConstant": false,
+                                                    "isLValue": false,
+                                                    "isPure": false,
+                                                    "lValueRequested": false,
+                                                    "leftExpression": {
+                                                        "expression": {
+                                                            "id": 1535,
+                                                            "name": "levelList",
+                                                            "nodeType": "Identifier",
+                                                            "overloadedDeclarations": [],
+                                                            "referencedDeclaration": 1620,
+                                                            "src": "470:9:6",
+                                                            "typeDescriptions": {
+                                                                "typeIdentifier": "t_array$_t_uint256_$dyn_storage",
+                                                                "typeString": "uint256[] storage ref"
+                                                            }
+                                                        },
+                                                        "id": 1536,
+                                                        "isConstant": false,
+                                                        "isLValue": false,
+                                                        "isPure": false,
+                                                        "lValueRequested": false,
+                                                        "memberName": "length",
+                                                        "nodeType": "MemberAccess",
+                                                        "src": "470:16:6",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_uint256",
+                                                            "typeString": "uint256"
+                                                        }
+                                                    },
+                                                    "nodeType": "BinaryOperation",
+                                                    "operator": "-",
+                                                    "rightExpression": {
+                                                        "hexValue": "31",
+                                                        "id": 1537,
+                                                        "isConstant": false,
+                                                        "isLValue": false,
+                                                        "isPure": true,
+                                                        "kind": "number",
+                                                        "lValueRequested": false,
+                                                        "nodeType": "Literal",
+                                                        "src": "487:1:6",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_rational_1_by_1",
+                                                            "typeString": "int_const 1"
+                                                        },
+                                                        "value": "1"
+                                                    },
+                                                    "src": "470:18:6",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_uint256",
+                                                        "typeString": "uint256"
+                                                    }
+                                                },
+                                                "src": "447:41:6",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                }
+                                            }
+                                        ],
+                                        "expression": {
+                                            "argumentTypes": [
+                                                {
+                                                    "typeIdentifier": "t_bool",
+                                                    "typeString": "bool"
+                                                }
+                                            ],
+                                            "id": 1530,
+                                            "name": "require",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [
+                                                4294967278,
+                                                4294967278
+                                            ],
+                                            "referencedDeclaration": 4294967278,
+                                            "src": "439:7:6",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                                                "typeString": "function (bool) pure"
+                                            }
+                                        },
+                                        "id": 1540,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "kind": "functionCall",
+                                        "lValueRequested": false,
+                                        "names": [],
+                                        "nodeType": "FunctionCall",
+                                        "src": "439:50:6",
+                                        "tryCall": false,
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_tuple$__$",
+                                            "typeString": "tuple()"
+                                        }
+                                    },
+                                    "id": 1541,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "439:50:6"
+                                },
+                                {
+                                    "expression": {
+                                        "id": 1551,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "lValueRequested": false,
+                                        "leftHandSide": {
+                                            "expression": {
+                                                "id": 1542,
+                                                "name": "mySlot",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 1525,
+                                                "src": "499:6:6",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_struct$_Slot_$332_storage_ptr",
+                                                    "typeString": "struct SlotFactory.Slot storage pointer"
+                                                }
+                                            },
+                                            "id": 1544,
+                                            "isConstant": false,
+                                            "isLValue": true,
+                                            "isPure": false,
+                                            "lValueRequested": true,
+                                            "memberName": "exp",
+                                            "nodeType": "MemberAccess",
+                                            "referencedDeclaration": 331,
+                                            "src": "499:10:6",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_uint256",
+                                                "typeString": "uint256"
+                                            }
+                                        },
+                                        "nodeType": "Assignment",
+                                        "operator": "=",
+                                        "rightHandSide": {
+                                            "baseExpression": {
+                                                "id": 1545,
+                                                "name": "levelList",
+                                                "nodeType": "Identifier",
+                                                "overloadedDeclarations": [],
+                                                "referencedDeclaration": 1620,
+                                                "src": "512:9:6",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_array$_t_uint256_$dyn_storage",
+                                                    "typeString": "uint256[] storage ref"
+                                                }
+                                            },
+                                            "id": 1550,
+                                            "indexExpression": {
+                                                "arguments": [
+                                                    {
+                                                        "expression": {
+                                                            "id": 1547,
+                                                            "name": "mySlot",
+                                                            "nodeType": "Identifier",
+                                                            "overloadedDeclarations": [],
+                                                            "referencedDeclaration": 1525,
+                                                            "src": "531:6:6",
+                                                            "typeDescriptions": {
+                                                                "typeIdentifier": "t_struct$_Slot_$332_storage_ptr",
+                                                                "typeString": "struct SlotFactory.Slot storage pointer"
+                                                            }
+                                                        },
+                                                        "id": 1548,
+                                                        "isConstant": false,
+                                                        "isLValue": true,
+                                                        "isPure": false,
+                                                        "lValueRequested": false,
+                                                        "memberName": "exp",
+                                                        "nodeType": "MemberAccess",
+                                                        "referencedDeclaration": 331,
+                                                        "src": "531:10:6",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_uint256",
+                                                            "typeString": "uint256"
+                                                        }
+                                                    }
+                                                ],
+                                                "expression": {
+                                                    "argumentTypes": [
+                                                        {
+                                                            "typeIdentifier": "t_uint256",
+                                                            "typeString": "uint256"
+                                                        }
+                                                    ],
+                                                    "id": 1546,
+                                                    "name": "getLevel",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [],
+                                                    "referencedDeclaration": 1775,
+                                                    "src": "522:8:6",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_function_internal_view$_t_uint256_$returns$_t_uint256_$",
+                                                        "typeString": "function (uint256) view returns (uint256)"
+                                                    }
+                                                },
+                                                "id": 1549,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "kind": "functionCall",
+                                                "lValueRequested": false,
+                                                "names": [],
+                                                "nodeType": "FunctionCall",
+                                                "src": "522:20:6",
+                                                "tryCall": false,
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                }
+                                            },
+                                            "isConstant": false,
+                                            "isLValue": true,
+                                            "isPure": false,
+                                            "lValueRequested": false,
+                                            "nodeType": "IndexAccess",
+                                            "src": "512:31:6",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_uint256",
+                                                "typeString": "uint256"
+                                            }
+                                        },
+                                        "src": "499:44:6",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_uint256",
+                                            "typeString": "uint256"
+                                        }
+                                    },
+                                    "id": 1552,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "499:44:6"
+                                },
+                                {
+                                    "eventCall": {
+                                        "arguments": [
+                                            {
+                                                "expression": {
+                                                    "id": 1554,
+                                                    "name": "msg",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [],
+                                                    "referencedDeclaration": 4294967281,
+                                                    "src": "574:3:6",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_magic_message",
+                                                        "typeString": "msg"
+                                                    }
+                                                },
+                                                "id": 1555,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "lValueRequested": false,
+                                                "memberName": "sender",
+                                                "nodeType": "MemberAccess",
+                                                "src": "574:10:6",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_address",
+                                                    "typeString": "address"
+                                                }
+                                            }
+                                        ],
+                                        "expression": {
+                                            "argumentTypes": [
+                                                {
+                                                    "typeIdentifier": "t_address",
+                                                    "typeString": "address"
+                                                }
+                                            ],
+                                            "id": 1553,
+                                            "name": "createSlotEvent",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [],
+                                            "referencedDeclaration": 317,
+                                            "src": "558:15:6",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_function_event_nonpayable$_t_address_$returns$__$",
+                                                "typeString": "function (address)"
+                                            }
+                                        },
+                                        "id": 1556,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "kind": "functionCall",
+                                        "lValueRequested": false,
+                                        "names": [],
+                                        "nodeType": "FunctionCall",
+                                        "src": "558:27:6",
+                                        "tryCall": false,
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_tuple$__$",
+                                            "typeString": "tuple()"
+                                        }
+                                    },
+                                    "id": 1557,
+                                    "nodeType": "EmitStatement",
+                                    "src": "553:32:6"
+                                }
+                            ]
+                        },
+                        "functionSelector": "27adc95e",
+                        "id": 1559,
+                        "implemented": true,
+                        "kind": "function",
+                        "modifiers": [],
+                        "name": "UpgradeSlot",
+                        "nodeType": "FunctionDefinition",
+                        "parameters": {
+                            "id": 1514,
+                            "nodeType": "ParameterList",
+                            "parameters": [
+                                {
+                                    "constant": false,
+                                    "id": 1513,
+                                    "mutability": "mutable",
+                                    "name": "_slotID",
+                                    "nodeType": "VariableDeclaration",
+                                    "scope": 1559,
+                                    "src": "310:12:6",
+                                    "stateVariable": false,
+                                    "storageLocation": "default",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_uint256",
+                                        "typeString": "uint256"
+                                    },
+                                    "typeName": {
+                                        "id": 1512,
+                                        "name": "uint",
+                                        "nodeType": "ElementaryTypeName",
+                                        "src": "310:4:6",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_uint256",
+                                            "typeString": "uint256"
+                                        }
+                                    },
+                                    "visibility": "internal"
+                                }
+                            ],
+                            "src": "309:14:6"
+                        },
+                        "returnParameters": {
+                            "id": 1515,
+                            "nodeType": "ParameterList",
+                            "parameters": [],
+                            "src": "341:0:6"
+                        },
+                        "scope": 1591,
+                        "src": "289:303:6",
+                        "stateMutability": "payable",
+                        "virtual": false,
+                        "visibility": "external"
+                    },
+                    {
+                        "body": {
+                            "id": 1577,
+                            "nodeType": "Block",
+                            "src": "636:65:6",
+                            "statements": [
+                                {
+                                    "expression": {
+                                        "arguments": [
+                                            {
+                                                "expression": {
+                                                    "arguments": [
+                                                        {
+                                                            "id": 1572,
+                                                            "name": "this",
+                                                            "nodeType": "Identifier",
+                                                            "overloadedDeclarations": [],
+                                                            "referencedDeclaration": 4294967268,
+                                                            "src": "680:4:6",
+                                                            "typeDescriptions": {
+                                                                "typeIdentifier": "t_contract$_SlotUpgrade_$1591",
+                                                                "typeString": "contract SlotUpgrade"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "expression": {
+                                                        "argumentTypes": [
+                                                            {
+                                                                "typeIdentifier": "t_contract$_SlotUpgrade_$1591",
+                                                                "typeString": "contract SlotUpgrade"
+                                                            }
+                                                        ],
+                                                        "id": 1571,
+                                                        "isConstant": false,
+                                                        "isLValue": false,
+                                                        "isPure": true,
+                                                        "lValueRequested": false,
+                                                        "nodeType": "ElementaryTypeNameExpression",
+                                                        "src": "672:7:6",
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_type$_t_address_$",
+                                                            "typeString": "type(address)"
+                                                        },
+                                                        "typeName": {
+                                                            "id": 1570,
+                                                            "name": "address",
+                                                            "nodeType": "ElementaryTypeName",
+                                                            "src": "672:7:6",
+                                                            "typeDescriptions": {}
+                                                        }
+                                                    },
+                                                    "id": 1573,
+                                                    "isConstant": false,
+                                                    "isLValue": false,
+                                                    "isPure": false,
+                                                    "kind": "typeConversion",
+                                                    "lValueRequested": false,
+                                                    "names": [],
+                                                    "nodeType": "FunctionCall",
+                                                    "src": "672:13:6",
+                                                    "tryCall": false,
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_address",
+                                                        "typeString": "address"
+                                                    }
+                                                },
+                                                "id": 1574,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "lValueRequested": false,
+                                                "memberName": "balance",
+                                                "nodeType": "MemberAccess",
+                                                "src": "672:21:6",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                }
+                                            }
+                                        ],
+                                        "expression": {
+                                            "argumentTypes": [
+                                                {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                }
+                                            ],
+                                            "expression": {
+                                                "arguments": [
+                                                    {
+                                                        "arguments": [],
+                                                        "expression": {
+                                                            "argumentTypes": [],
+                                                            "id": 1566,
+                                                            "name": "owner",
+                                                            "nodeType": "Identifier",
+                                                            "overloadedDeclarations": [],
+                                                            "referencedDeclaration": 2372,
+                                                            "src": "654:5:6",
+                                                            "typeDescriptions": {
+                                                                "typeIdentifier": "t_function_internal_view$__$returns$_t_address_$",
+                                                                "typeString": "function () view returns (address)"
+                                                            }
+                                                        },
+                                                        "id": 1567,
+                                                        "isConstant": false,
+                                                        "isLValue": false,
+                                                        "isPure": false,
+                                                        "kind": "functionCall",
+                                                        "lValueRequested": false,
+                                                        "names": [],
+                                                        "nodeType": "FunctionCall",
+                                                        "src": "654:7:6",
+                                                        "tryCall": false,
+                                                        "typeDescriptions": {
+                                                            "typeIdentifier": "t_address",
+                                                            "typeString": "address"
+                                                        }
+                                                    }
+                                                ],
+                                                "expression": {
+                                                    "argumentTypes": [
+                                                        {
+                                                            "typeIdentifier": "t_address",
+                                                            "typeString": "address"
+                                                        }
+                                                    ],
+                                                    "id": 1565,
+                                                    "isConstant": false,
+                                                    "isLValue": false,
+                                                    "isPure": true,
+                                                    "lValueRequested": false,
+                                                    "nodeType": "ElementaryTypeNameExpression",
+                                                    "src": "646:8:6",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_type$_t_address_payable_$",
+                                                        "typeString": "type(address payable)"
+                                                    },
+                                                    "typeName": {
+                                                        "id": 1564,
+                                                        "name": "address",
+                                                        "nodeType": "ElementaryTypeName",
+                                                        "src": "646:8:6",
+                                                        "stateMutability": "payable",
+                                                        "typeDescriptions": {}
+                                                    }
+                                                },
+                                                "id": 1568,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "kind": "typeConversion",
+                                                "lValueRequested": false,
+                                                "names": [],
+                                                "nodeType": "FunctionCall",
+                                                "src": "646:16:6",
+                                                "tryCall": false,
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_address_payable",
+                                                    "typeString": "address payable"
+                                                }
+                                            },
+                                            "id": 1569,
+                                            "isConstant": false,
+                                            "isLValue": false,
+                                            "isPure": false,
+                                            "lValueRequested": false,
+                                            "memberName": "transfer",
+                                            "nodeType": "MemberAccess",
+                                            "src": "646:25:6",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_function_transfer_nonpayable$_t_uint256_$returns$__$",
+                                                "typeString": "function (uint256)"
+                                            }
+                                        },
+                                        "id": 1575,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "kind": "functionCall",
+                                        "lValueRequested": false,
+                                        "names": [],
+                                        "nodeType": "FunctionCall",
+                                        "src": "646:48:6",
+                                        "tryCall": false,
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_tuple$__$",
+                                            "typeString": "tuple()"
+                                        }
+                                    },
+                                    "id": 1576,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "646:48:6"
+                                }
+                            ]
+                        },
+                        "functionSelector": "3ccfd60b",
+                        "id": 1578,
+                        "implemented": true,
+                        "kind": "function",
+                        "modifiers": [
+                            {
+                                "id": 1562,
+                                "modifierName": {
+                                    "id": 1561,
+                                    "name": "onlyOwner",
+                                    "nodeType": "IdentifierPath",
+                                    "referencedDeclaration": 2386,
+                                    "src": "626:9:6"
+                                },
+                                "nodeType": "ModifierInvocation",
+                                "src": "626:9:6"
+                            }
+                        ],
+                        "name": "withdraw",
+                        "nodeType": "FunctionDefinition",
+                        "parameters": {
+                            "id": 1560,
+                            "nodeType": "ParameterList",
+                            "parameters": [],
+                            "src": "614:2:6"
+                        },
+                        "returnParameters": {
+                            "id": 1563,
+                            "nodeType": "ParameterList",
+                            "parameters": [],
+                            "src": "636:0:6"
+                        },
+                        "scope": 1591,
+                        "src": "597:104:6",
+                        "stateMutability": "nonpayable",
+                        "virtual": false,
+                        "visibility": "external"
+                    },
+                    {
+                        "body": {
+                            "id": 1589,
+                            "nodeType": "Block",
+                            "src": "759:34:6",
+                            "statements": [
+                                {
+                                    "expression": {
+                                        "id": 1587,
+                                        "isConstant": false,
+                                        "isLValue": false,
+                                        "isPure": false,
+                                        "lValueRequested": false,
+                                        "leftHandSide": {
+                                            "id": 1585,
+                                            "name": "levelUpFee",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [],
+                                            "referencedDeclaration": 1492,
+                                            "src": "769:10:6",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_uint256",
+                                                "typeString": "uint256"
+                                            }
+                                        },
+                                        "nodeType": "Assignment",
+                                        "operator": "=",
+                                        "rightHandSide": {
+                                            "id": 1586,
+                                            "name": "_fee",
+                                            "nodeType": "Identifier",
+                                            "overloadedDeclarations": [],
+                                            "referencedDeclaration": 1580,
+                                            "src": "782:4:6",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_uint256",
+                                                "typeString": "uint256"
+                                            }
+                                        },
+                                        "src": "769:17:6",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_uint256",
+                                            "typeString": "uint256"
+                                        }
+                                    },
+                                    "id": 1588,
+                                    "nodeType": "ExpressionStatement",
+                                    "src": "769:17:6"
+                                }
+                            ]
+                        },
+                        "functionSelector": "ccf670f8",
+                        "id": 1590,
+                        "implemented": true,
+                        "kind": "function",
+                        "modifiers": [
+                            {
+                                "id": 1583,
+                                "modifierName": {
+                                    "id": 1582,
+                                    "name": "onlyOwner",
+                                    "nodeType": "IdentifierPath",
+                                    "referencedDeclaration": 2386,
+                                    "src": "749:9:6"
+                                },
+                                "nodeType": "ModifierInvocation",
+                                "src": "749:9:6"
+                            }
+                        ],
+                        "name": "setLevelUpFee",
+                        "nodeType": "FunctionDefinition",
+                        "parameters": {
+                            "id": 1581,
+                            "nodeType": "ParameterList",
+                            "parameters": [
+                                {
+                                    "constant": false,
+                                    "id": 1580,
+                                    "mutability": "mutable",
+                                    "name": "_fee",
+                                    "nodeType": "VariableDeclaration",
+                                    "scope": 1590,
+                                    "src": "729:9:6",
+                                    "stateVariable": false,
+                                    "storageLocation": "default",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_uint256",
+                                        "typeString": "uint256"
+                                    },
+                                    "typeName": {
+                                        "id": 1579,
+                                        "name": "uint",
+                                        "nodeType": "ElementaryTypeName",
+                                        "src": "729:4:6",
+                                        "typeDescriptions": {
+                                            "typeIdentifier": "t_uint256",
+                                            "typeString": "uint256"
+                                        }
+                                    },
+                                    "visibility": "internal"
+                                }
+                            ],
+                            "src": "728:11:6"
+                        },
+                        "returnParameters": {
+                            "id": 1584,
+                            "nodeType": "ParameterList",
+                            "parameters": [],
+                            "src": "759:0:6"
+                        },
+                        "scope": 1591,
+                        "src": "706:87:6",
+                        "stateMutability": "nonpayable",
+                        "virtual": false,
+                        "visibility": "external"
+                    }
+                ],
+                "scope": 1592,
+                "src": "82:713:6"
+            }
+        ],
+        "src": "32:763:6"
+    },
+    "functionHashes": {
+        "OwnerMoneyCount(address)": "580405ba",
+        "OwnerSlotCount(address)": "8871c9c5",
+        "UpgradeSlot(uint256)": "27adc95e",
+        "addInLevelList(uint256)": "eb320915",
+        "buySlot(uint256)": "ab2874cb",
+        "createFarm()": "1d5ec3cb",
+        "cropsList(uint256)": "a9bf928f",
+        "delInCropsList(uint256)": "6099804d",
+        "getFarmByOwner(address)": "575c25b0",
+        "getLevel(uint256)": "86481d40",
+        "initLevelList()": "0d79e835",
+        "levelList(uint256)": "98815594",
+        "modInCropsList(uint256,uint256,uint256,uint256)": "e1928ac9",
+        "owner()": "8da5cb5b",
+        "renounceOwnership()": "715018a6",
+        "setLevelUpFee(uint256)": "ccf670f8",
+        "slotToOwner(uint256)": "0c10e499",
+        "slots(uint256)": "387dd9e9",
+        "transferOwnership(address)": "f2fde38b",
+        "withdraw()": "3ccfd60b"
+    },
+    "gasEstimates": {
+        "creation": {
+            "codeDepositCost": "858800",
+            "executionCost": "43346",
+            "totalCost": "902146"
+        },
+        "external": {
+            "OwnerMoneyCount(address)": "1284",
+            "OwnerSlotCount(address)": "1262",
+            "UpgradeSlot(uint256)": "infinite",
+            "addInLevelList(uint256)": "45476",
+            "buySlot(uint256)": "infinite",
+            "createFarm()": "infinite",
+            "cropsList(uint256)": "6328",
+            "delInCropsList(uint256)": "53501",
+            "getFarmByOwner(address)": "infinite",
+            "getLevel(uint256)": "infinite",
+            "initLevelList()": "109439",
+            "levelList(uint256)": "2085",
+            "modInCropsList(uint256,uint256,uint256,uint256)": "114393",
+            "owner()": "1137",
+            "renounceOwnership()": "24363",
+            "setLevelUpFee(uint256)": "21198",
+            "slotToOwner(uint256)": "1237",
+            "slots(uint256)": "7156",
+            "transferOwnership(address)": "24565",
+            "withdraw()": "infinite"
+        }
+    }
+}

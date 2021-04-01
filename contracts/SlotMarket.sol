@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -21,7 +22,7 @@ contract SlotMarket is SlotOwnership{
         address poster;
         uint256 item;
         uint256 price;
-        bytes32 status; // Open, Executed, Cancelled
+        bool status; // Open, Executed, Cancelled
     }
 
     mapping(uint256 => Trade) public trades;
@@ -49,7 +50,7 @@ contract SlotMarket is SlotOwnership{
             address,
             uint256,
             uint256,
-            bytes32
+            bool
         )
     {
         Trade memory trade = trades[_trade];
@@ -61,13 +62,14 @@ contract SlotMarket is SlotOwnership{
      * @param _item The id for the item to trade.
      * @param _price The amount of currency for which to trade the item.
      */
-    function openTrade(uint256 _item, uint256 _price) public  {
+    function openTrade(uint256 _item, uint256 _price) public onlyOwnerOf(_item) {
+        require(OwnerSlotCount[msg.sender] > 6);
         transferFrom(msg.sender, address(this), _item);
         trades[tradeCounter] = Trade({
             poster: msg.sender,
             item: _item,
             price: _price,
-            status: "Open"
+            status: true
         });
         tradeCounter += 1;
         emit TradeStatusChange(tradeCounter - 1, "Open");
@@ -81,11 +83,11 @@ contract SlotMarket is SlotOwnership{
      */
     function executeTrade(uint256 _trade) public payable {
         Trade memory trade = trades[_trade];
-        require(trade.status == "Open", "Trade is not Open.");
-        require(msg.value == trade.price);
+        require(trade.status == true, "Trade is not Open");
+        require(msg.value == trade.price * (1 ether));
         payable(trade.poster).transfer(trade.price);
         transferFrom(address(this), msg.sender, trade.item);
-        trades[_trade].status = "Executed";
+        trades[_trade].status = false;
         emit TradeStatusChange(_trade, "Executed");
     }
 
@@ -99,9 +101,9 @@ contract SlotMarket is SlotOwnership{
             msg.sender == trade.poster,
             "Trade can be cancelled only by poster."
         );
-        require(trade.status == "Open", "Trade is not Open.");
+        require(trade.status == true, "Trade is not Open.");
         transferFrom(address(this), trade.poster, trade.item);
-        trades[_trade].status = "Cancelled";
+        trades[_trade].status = false;
         emit TradeStatusChange(_trade, "Cancelled");
     }
 }
