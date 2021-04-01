@@ -145,6 +145,7 @@ class App extends Component {
           //   this.getFactory();
           // }
           this.getFactory();
+          this.getMarket();
         }
       });
 
