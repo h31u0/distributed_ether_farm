@@ -206,7 +206,7 @@ class App extends Component {
       temp.tradeIdx = i;
       temp.key = item
       var slt = await contract.methods.slots(item).call({from: accounts[0]});
-      if (Web3.utils.toAscii(status).slice(0, 4)=="Open") {
+      if (status) {
         temp.exp = slt.exp;
         temp.price = price;
         temp.item = item;
