@@ -84,7 +84,7 @@ contract SlotMarket is SlotOwnership{
     function executeTrade(uint256 _trade) public payable {
         Trade memory trade = trades[_trade];
         require(trade.status == true, "Trade is not Open");
-        require(msg.value == trade.price * (1 ether));
+        require(msg.value == trade.price * (1 wei));
         payable(trade.poster).transfer(trade.price);
         transferFrom(address(this), msg.sender, trade.item);
         trades[_trade].status = false;

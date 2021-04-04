@@ -271,7 +271,7 @@ class App extends Component {
     }
     if (selectedItem != null && accounts[0] != selectedItem.poster) {
       arr.push(<Button onClick={() => {
-        contract.methods.executeTrade(selectedItem.tradeIdx).send({from: accounts[0], value: levelUpFee});
+        contract.methods.executeTrade(selectedItem.tradeIdx).send({from: accounts[0], value: selectedItem.price});
       }}>Buy Slot</Button>);
     }
     return arr;
