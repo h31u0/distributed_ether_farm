@@ -1,5 +1,13 @@
 # distributed_ether_farm
 
+## To run the code
+```
+truffle compile
+truffle migrate
+cd client
+npm run start
+```
+
 ## Game Concept
 In this project, we’ll build a DAPP (decentralized application) game to combine the business simulation game with blockchain technology. In the game, each user owns farmland where a user can plant, grow and harvest crops. A user can add friends with another user and steal his/her friend's mature crops. Each crop is represented by a token and can be kept by the user after it's harvested. Users can trade the tokens they have with each other. 
 
